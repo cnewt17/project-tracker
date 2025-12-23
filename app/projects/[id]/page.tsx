@@ -15,6 +15,8 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+import Button from "@/components/Button";
+import PageTransition from "@/components/PageTransition";
 
 const statusColors = {
   Planning: "bg-blue-100 text-blue-700 border-blue-200",
@@ -135,232 +137,241 @@ export default function ProjectDetailPage({
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-        <p className="text-slate-600">Loading project...</p>
+        <p className="text-slate-600 dark:text-slate-400">Loading project...</p>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="text-center py-12 text-slate-600">Project not found</div>
+      <div className="text-center py-12 text-slate-600 dark:text-slate-400">
+        Project not found
+      </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      {/* Back Navigation */}
-      <Link
-        href="/projects"
-        className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Projects
-      </Link>
+    <PageTransition>
+      <div className="space-y-8">
+        {/* Back Navigation */}
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Projects
+        </Link>
 
-      {/* Project Header Card */}
-      <div className="bg-white shadow-md rounded-xl p-8 border border-slate-200">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-3">
-              <h1 className="text-3xl font-bold text-slate-900">
-                {project.name}
-              </h1>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-semibold border ${statusColors[project.status]} flex items-center gap-1`}
-              >
-                <span>{statusIcons[project.status]}</span>
-                {project.status}
-              </span>
-            </div>
-            {project.description && (
-              <div className="flex items-start gap-2 text-slate-600 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <FileText className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <p className="leading-relaxed">{project.description}</p>
+        {/* Project Header Card */}
+        <div className="bg-white dark:bg-slate-800 shadow-md rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
+                  {project.name}
+                </h1>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold border ${statusColors[project.status]} flex items-center gap-1`}
+                >
+                  <span>{statusIcons[project.status]}</span>
+                  {project.status}
+                </span>
               </div>
-            )}
+              {project.description && (
+                <div className="flex items-start gap-2 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <FileText className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <p className="leading-relaxed">{project.description}</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-slate-200">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <Calendar className="w-5 h-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-600 font-medium">Start Date</p>
-              <p className="text-lg font-semibold text-slate-900">
-                {new Date(project.start_date).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-          {project.end_date && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-3">
-              <div className="bg-purple-50 p-3 rounded-lg">
-                <Calendar className="w-5 h-5 text-purple-600" />
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-600 font-medium">End Date</p>
-                <p className="text-lg font-semibold text-slate-900">
-                  {new Date(project.end_date).toLocaleDateString()}
+                <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                  Start Date
+                </p>
+                <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+                  {new Date(project.start_date).toLocaleDateString()}
                 </p>
               </div>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Resources Section */}
-      <div>
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-50 p-2 rounded-lg">
-              <Users className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900">Resources</h2>
-              <p className="text-sm text-slate-600">
-                {project.resources.length} assigned
-              </p>
-            </div>
+            {project.end_date && (
+              <div className="flex items-center gap-3">
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+                  <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                    End Date
+                  </p>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+                    {new Date(project.end_date).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-          <button
-            onClick={() => setShowResourceForm(!showResourceForm)}
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md font-medium"
-          >
-            {showResourceForm ? (
-              <>
-                <X className="w-5 h-5" />
-                Cancel
-              </>
-            ) : (
-              <>
+        </div>
+
+        {/* Resources Section */}
+        <div>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg">
+                <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+                  Resources
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {project.resources.length} assigned
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => setShowResourceForm(!showResourceForm)}
+              variant="primary"
+              size="lg"
+              className="shadow-sm hover:shadow-md"
+            >
+              {showResourceForm ? (
+                <>
+                  <X className="w-5 h-5" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5" />
+                  Add Resource
+                </>
+              )}
+            </Button>
+          </div>
+
+          {showResourceForm && (
+            <form
+              onSubmit={handleAddResource}
+              className="bg-white dark:bg-slate-800 shadow-md rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6"
+            >
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-4">
+                Add New Resource
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Resource Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={resourceFormData.name}
+                    onChange={(e) =>
+                      setResourceFormData({
+                        ...resourceFormData,
+                        name: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Type *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={resourceFormData.type}
+                    onChange={(e) =>
+                      setResourceFormData({
+                        ...resourceFormData,
+                        type: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
+                    placeholder="e.g., Developer, Designer"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Allocation % *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value={resourceFormData.allocation_percentage}
+                    onChange={(e) =>
+                      setResourceFormData({
+                        ...resourceFormData,
+                        allocation_percentage: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
+                    placeholder="50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Start Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={resourceFormData.start_date}
+                    onChange={(e) =>
+                      setResourceFormData({
+                        ...resourceFormData,
+                        start_date: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    End Date (Optional)
+                  </label>
+                  <input
+                    type="date"
+                    value={resourceFormData.end_date}
+                    onChange={(e) =>
+                      setResourceFormData({
+                        ...resourceFormData,
+                        end_date: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
+                  />
+                </div>
+              </div>
+
+              <Button type="submit" variant="primary" size="md">
                 <Plus className="w-5 h-5" />
                 Add Resource
-              </>
-            )}
-          </button>
+              </Button>
+            </form>
+          )}
+
+          <ResourceTable
+            resources={project.resources}
+            onDelete={handleDeleteResource}
+          />
         </div>
-
-        {showResourceForm && (
-          <form
-            onSubmit={handleAddResource}
-            className="bg-white shadow-md rounded-xl p-6 border border-slate-200 mb-6"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">
-              Add New Resource
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Resource Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={resourceFormData.name}
-                  onChange={(e) =>
-                    setResourceFormData({
-                      ...resourceFormData,
-                      name: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="John Doe"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Type *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={resourceFormData.type}
-                  onChange={(e) =>
-                    setResourceFormData({
-                      ...resourceFormData,
-                      type: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="e.g., Developer, Designer"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Allocation % *
-                </label>
-                <input
-                  type="number"
-                  required
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={resourceFormData.allocation_percentage}
-                  onChange={(e) =>
-                    setResourceFormData({
-                      ...resourceFormData,
-                      allocation_percentage: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="50"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Start Date *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={resourceFormData.start_date}
-                  onChange={(e) =>
-                    setResourceFormData({
-                      ...resourceFormData,
-                      start_date: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  End Date (Optional)
-                </label>
-                <input
-                  type="date"
-                  value={resourceFormData.end_date}
-                  onChange={(e) =>
-                    setResourceFormData({
-                      ...resourceFormData,
-                      end_date: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
-              <Plus className="w-5 h-5" />
-              Add Resource
-            </button>
-          </form>
-        )}
-
-        <ResourceTable
-          resources={project.resources}
-          onDelete={handleDeleteResource}
-        />
       </div>
-    </div>
+    </PageTransition>
   );
 }
