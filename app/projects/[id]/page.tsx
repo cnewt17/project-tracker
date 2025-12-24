@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Project, Resource } from "@/lib/types";
+import { Project, Resource, Milestone } from "@/lib/types";
 import ResourceTable from "@/components/ResourceTable";
+import MilestoneCard from "@/components/MilestoneCard";
+import MilestoneForm from "@/components/MilestoneForm";
 import Link from "next/link";
 import { use } from "react";
 import {
@@ -14,6 +16,7 @@ import {
   FileText,
   Loader2,
   X,
+  Flag,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -40,10 +43,14 @@ export default function ProjectDetailPage({
   const resolvedParams = use(params);
   const router = useRouter();
   const [project, setProject] = useState<
-    (Project & { resources: Resource[] }) | null
+    (Project & { resources: Resource[]; milestones: Milestone[] }) | null
   >(null);
   const [loading, setLoading] = useState(true);
   const [showResourceForm, setShowResourceForm] = useState(false);
+  const [showMilestoneForm, setShowMilestoneForm] = useState(false);
+  const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(
+    null,
+  );
   const [resourceFormData, setResourceFormData] = useState({
     name: "",
     type: "Developer",
@@ -131,6 +138,91 @@ export default function ProjectDetailPage({
       console.error("Error adding resource:", error);
       alert("Failed to add resource");
     }
+  }
+
+  async function handleSubmitMilestone(data: any) {
+    try {
+      if (editingMilestone) {
+        const res = await fetch(`/api/milestones/${editingMilestone.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          setShowMilestoneForm(false);
+          setEditingMilestone(null);
+          fetchProject();
+        } else {
+          const error = await res.json();
+          alert(error.error || "Failed to update milestone");
+        }
+      } else {
+        const res = await fetch("/api/milestones", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          setShowMilestoneForm(false);
+          fetchProject();
+        } else {
+          const error = await res.json();
+          alert(error.error || "Failed to create milestone");
+        }
+      }
+    } catch (error) {
+      console.error("Error with milestone:", error);
+      alert("Failed to save milestone");
+    }
+  }
+
+  async function handleDeleteMilestone(milestoneId: number) {
+    if (!confirm("Are you sure you want to delete this milestone?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/milestones/${milestoneId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        fetchProject();
+      } else {
+        alert("Failed to delete milestone");
+      }
+    } catch (error) {
+      console.error("Error deleting milestone:", error);
+      alert("Failed to delete milestone");
+    }
+  }
+
+  async function handleUpdateProgress(milestoneId: number, progress: number) {
+    try {
+      const res = await fetch(`/api/milestones/${milestoneId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ progress }),
+      });
+
+      if (res.ok) {
+        fetchProject();
+      }
+    } catch (error) {
+      console.error("Error updating progress:", error);
+    }
+  }
+
+  function handleEditMilestone(milestone: Milestone) {
+    setEditingMilestone(milestone);
+    setShowMilestoneForm(true);
+  }
+
+  function handleCancelMilestoneForm() {
+    setShowMilestoneForm(false);
+    setEditingMilestone(null);
   }
 
   if (loading) {
@@ -370,6 +462,93 @@ export default function ProjectDetailPage({
             resources={project.resources}
             onDelete={handleDeleteResource}
           />
+        </div>
+
+        {/* Milestones Section */}
+        <div>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
+                <Flag className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+                  Milestones
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {project.milestones?.length || 0} milestone
+                  {project.milestones?.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => {
+                setEditingMilestone(null);
+                setShowMilestoneForm(!showMilestoneForm);
+              }}
+              variant="primary"
+              size="lg"
+              className="shadow-sm hover:shadow-md"
+            >
+              {showMilestoneForm ? (
+                <>
+                  <X className="w-5 h-5" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5" />
+                  Add Milestone
+                </>
+              )}
+            </Button>
+          </div>
+
+          {showMilestoneForm && (
+            <div className="mb-6">
+              <MilestoneForm
+                projectId={parseInt(resolvedParams.id)}
+                milestone={editingMilestone || undefined}
+                onSubmit={handleSubmitMilestone}
+                onCancel={handleCancelMilestoneForm}
+              />
+            </div>
+          )}
+
+          {project.milestones && project.milestones.length > 0 ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {project.milestones.map((milestone) => (
+                <MilestoneCard
+                  key={milestone.id}
+                  milestone={milestone}
+                  onDelete={handleDeleteMilestone}
+                  onEdit={handleEditMilestone}
+                  onUpdateProgress={handleUpdateProgress}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-slate-800 shadow-md rounded-xl p-12 border border-slate-200 dark:border-slate-700 text-center">
+              <div className="bg-slate-50 dark:bg-slate-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Flag className="w-8 h-8 text-slate-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50 mb-2">
+                No milestones yet
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400 mb-6">
+                Add milestones to track important deadlines and goals for this
+                project
+              </p>
+              <Button
+                onClick={() => setShowMilestoneForm(true)}
+                variant="primary"
+                size="md"
+              >
+                <Plus className="w-5 h-5" />
+                Add First Milestone
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </PageTransition>

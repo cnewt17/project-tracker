@@ -45,6 +45,7 @@ A Next.js application for tracking projects and their resource allocation, desig
   - End date (optional)
   - Description (optional)
   - Created/updated timestamps
+  - Milestones (optional)
 
 **User Stories:**
 - As a user, I can create a new project with basic information
@@ -52,6 +53,10 @@ A Next.js application for tracking projects and their resource allocation, desig
 - As a user, I can edit project details
 - As a user, I can delete a project
 - As a user, I can filter projects by status
+- As a user, I can create/edit/delete milestones for a project
+- As a user, I can track milestone status (in progress, completed)
+- As a user, I can set milestone due dates
+- As a user, I can view milestone progress bars
 
 ### 2. Resource Management
 **Requirements:**
