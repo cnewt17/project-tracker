@@ -124,7 +124,7 @@ export default function ProjectsPage() {
           }
         }}
         title="Delete Project"
-        message="Are you sure you want to delete this project? This action cannot be undone and will also delete all associated resources."
+        message="Are you sure you want to delete this project? This action cannot be undone and will also delete all associated project team members."
         confirmText="Delete"
         cancelText="Cancel"
         variant="danger"

@@ -67,7 +67,7 @@ export default function Dashboard() {
               Dashboard
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              Track your projects and resources at a glance
+              Track your projects at a glance
             </p>
           </div>
           <Link href="/projects/new">
@@ -101,14 +101,14 @@ export default function Dashboard() {
                 iconBgColor="bg-green-100"
               />
               <StatCard
-                title="Total Resources"
+                title="Total People"
                 value={stats.totalResources}
                 icon={Users}
                 iconColor="text-purple-600"
                 iconBgColor="bg-purple-100"
               />
               <StatCard
-                title="Over-Allocated"
+                title="People Over-Allocated"
                 value={stats.overAllocatedResources}
                 icon={AlertTriangle}
                 iconColor={

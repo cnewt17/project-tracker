@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -24,8 +25,6 @@ export default function ThemeToggle() {
       </Button>
     );
   }
-
-  const { theme, toggleTheme } = useTheme();
 
   return (
     <Button
