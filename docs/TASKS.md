@@ -193,9 +193,9 @@
 - [x] **Add micro-interactions** - Button hover animations
 
 ### Data Visualization
-- [x] **Add mini charts to stat cards** - Small sparkline graphs
+- [ ] **Add mini charts to stat cards** - Small sparkline graphs
 - [x] **Add progress indicators** - Show project completion percentage
-- [x] **Add trend indicators** - "↑ 12% from last month" in stat cards
+- [ ] **Add trend indicators** - "↑ 12% from last month" in stat cards
 - [x] **Add resource allocation bars** - Visual representation in project cards
 
 ### Loading & Empty States
@@ -260,39 +260,39 @@
 - [ ] Add keyboard shortcuts (Esc to close modals)
 
 ## Enhancements - Project Milestones  
-- [ ] Add milestone creation/edit functionality
-- [ ] Add milestone status tracking (in progress, completed)
+- [x] Add milestone creation/edit functionality
+- [x] Add milestone status tracking (in progress, completed)
 - [ ] Add milestone due date reminders
-- [ ] Add milestone progress bar
+- [x] Add milestone progress bar
 
 ### Enhancements - Project Management
-- [ ] Add project edit functionality
-- [ ] Add project archive feature (instead of delete)
-- [ ] Add project search functionality
-- [ ] Add project sorting (by date, name, status)
+- [x] Add project edit functionality
+- [x] Add project archive feature (instead of delete)
+- [x] Add project search functionality
+- [x] Add project sorting (by date, name, status)
 - [ ] Add pagination for large project lists
-- [ ] Add project duplication feature
+- [x] Add project duplication feature
 
 ### Enhancements - Resource Management
-- [ ] Add resource edit functionality inline
+- [x] Add resource edit functionality inline
 - [ ] Add resource search/filter across all projects
 - [ ] Add resource availability calendar view
-- [ ] Show total allocation per resource across all projects
-- [ ] Add resource type suggestions/autocomplete
-- [ ] Warn when assigning over-allocated resources
+- [x] Show total allocation per resource across all projects
+- [x] Add resource type suggestions/autocomplete
+- [x] Warn when assigning over-allocated resources
 
 ### Enhancements - Dashboard
 - [ ] Add charts/graphs for visual analytics
 - [ ] Add date range filter for statistics
-- [ ] Add export functionality (CSV, PDF)
+- [x] Add export functionality (CSV, PDF)
 - [ ] Add project timeline view
 - [ ] Show trending metrics (week over week)
-- [ ] Add quick action buttons
+- [x] Add quick action buttons
 
 ### Enhancements - Data Management
 - [ ] Add CSV import for projects
 - [ ] Add CSV import for resources
-- [ ] Add CSV export for projects
+- [x] Add CSV export for projects
 - [ ] Add CSV export for resources
 - [ ] Add database backup functionality
 - [ ] Add database restore functionality
@@ -364,11 +364,7 @@
 
 ## Known Issues 🐛
 
-- Dark background with insufficient contrast makes text hard to read
-- Headings blend into background
-- Stat cards lack visual depth
-- Status badges need better color distinction
-- Cards lack hover effects and visual interest
+None currently identified.
 
 ---
 
@@ -382,4 +378,4 @@
 
 ---
 
-**Last Updated:** December 19, 2025
+**Last Updated:** December 24, 2025
