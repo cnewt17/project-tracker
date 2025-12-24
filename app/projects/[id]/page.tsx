@@ -21,6 +21,7 @@ import {
   Archive,
   ArchiveRestore,
   Copy,
+  AlertCircle,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -62,10 +63,22 @@ export default function ProjectDetailPage({
     start_date: "",
     end_date: "",
   });
+  const [allocationWarning, setAllocationWarning] = useState<string>("");
 
   useEffect(() => {
     fetchProject();
   }, [resolvedParams.id]);
+
+  useEffect(() => {
+    if (resourceFormData.name && resourceFormData.allocation_percentage) {
+      checkResourceAllocation(
+        resourceFormData.name,
+        parseFloat(resourceFormData.allocation_percentage),
+      );
+    } else {
+      setAllocationWarning("");
+    }
+  }, [resourceFormData.name, resourceFormData.allocation_percentage]);
 
   async function fetchProject() {
     try {
@@ -102,6 +115,60 @@ export default function ProjectDetailPage({
     } catch (error) {
       console.error("Error deleting resource:", error);
       alert("Failed to delete resource");
+    }
+  }
+
+  async function handleEditResource(
+    resourceId: number,
+    data: Partial<Resource>,
+  ) {
+    try {
+      const res = await fetch(`/api/resources/${resourceId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        fetchProject();
+      } else {
+        const error = await res.json();
+        alert(error.error || "Failed to update resource");
+      }
+    } catch (error) {
+      console.error("Error updating resource:", error);
+      alert("Failed to update resource");
+    }
+  }
+
+  async function checkResourceAllocation(name: string, newAllocation: number) {
+    if (!name || !newAllocation) {
+      setAllocationWarning("");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/resources/allocation");
+      if (res.ok) {
+        const data = await res.json();
+        const resourceAllocation = data.find((item: any) => item.name === name);
+
+        if (resourceAllocation) {
+          const totalAllocation =
+            resourceAllocation.total_allocation + newAllocation;
+          if (totalAllocation > 100) {
+            setAllocationWarning(
+              `Warning: ${name} will be ${totalAllocation}% allocated across all projects (currently ${resourceAllocation.total_allocation}%)`,
+            );
+          } else {
+            setAllocationWarning("");
+          }
+        } else {
+          setAllocationWarning("");
+        }
+      }
+    } catch (error) {
+      console.error("Error checking allocation:", error);
     }
   }
 
@@ -506,6 +573,14 @@ export default function ProjectDetailPage({
                     className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
                     placeholder="50"
                   />
+                  {allocationWarning && (
+                    <div className="mt-2 flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                      <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-amber-800 dark:text-amber-300">
+                        {allocationWarning}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -556,6 +631,7 @@ export default function ProjectDetailPage({
           <ResourceTable
             resources={project.resources}
             onDelete={handleDeleteResource}
+            onEdit={handleEditResource}
           />
         </div>
 
