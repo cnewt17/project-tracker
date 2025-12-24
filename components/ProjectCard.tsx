@@ -1,10 +1,15 @@
 import { Project } from "@/lib/types";
 import Link from "next/link";
-import { Calendar, FolderOpen, Trash2 } from "lucide-react";
+import { Calendar, FolderOpen, Trash2, Flag } from "lucide-react";
 import Button from "./Button";
 
 interface ProjectCardProps {
-  project: Project;
+  project: Project & {
+    milestoneStats?: {
+      total: number;
+      completed: number;
+    };
+  };
   onDelete?: (id: number) => void;
 }
 
@@ -66,12 +71,48 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
         )}
       </div>
 
+      {/* Milestone Progress */}
+      {project.milestoneStats && project.milestoneStats.total > 0 && (
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+              <Flag className="w-4 h-4 text-blue-500" />
+              <span className="font-medium">
+                {project.milestoneStats.completed} /{" "}
+                {project.milestoneStats.total} milestones
+              </span>
+            </div>
+            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+              {Math.round(
+                (project.milestoneStats.completed /
+                  project.milestoneStats.total) *
+                  100,
+              )}
+              %
+            </span>
+          </div>
+          <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 rounded-full ${
+                project.milestoneStats.completed ===
+                project.milestoneStats.total
+                  ? "bg-green-500"
+                  : "bg-blue-500"
+              }`}
+              style={{
+                width: `${(project.milestoneStats.completed / project.milestoneStats.total) * 100}%`,
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {onDelete && (
         <Button
           onClick={() => onDelete(project.id)}
           variant="ghost"
           size="sm"
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
         >
           <Trash2 className="w-4 h-4" />
           Delete

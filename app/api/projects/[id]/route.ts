@@ -26,7 +26,12 @@ export async function GET(
       id,
     );
 
-    return NextResponse.json({ ...project, resources });
+    const milestones = await db.all(
+      "SELECT * FROM milestones WHERE project_id = ? ORDER BY due_date ASC",
+      id,
+    );
+
+    return NextResponse.json({ ...project, resources, milestones });
   } catch (error) {
     console.error("Error fetching project:", error);
     return NextResponse.json(
@@ -142,8 +147,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    // Manually delete associated resources first
+    // Manually delete associated resources and milestones first
     await db.run("DELETE FROM resources WHERE project_id = ?", id);
+    await db.run("DELETE FROM milestones WHERE project_id = ?", id);
     await db.run("DELETE FROM projects WHERE id = ?", id);
     return NextResponse.json({ message: "Project deleted successfully" });
   } catch (error) {

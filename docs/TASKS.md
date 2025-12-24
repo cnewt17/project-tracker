@@ -259,6 +259,12 @@
 - [ ] Add confirmation dialogs for all delete operations
 - [ ] Add keyboard shortcuts (Esc to close modals)
 
+## Enhancements - Project Milestones  
+- [ ] Add milestone creation/edit functionality
+- [ ] Add milestone status tracking (in progress, completed)
+- [ ] Add milestone due date reminders
+- [ ] Add milestone progress bar
+
 ### Enhancements - Project Management
 - [ ] Add project edit functionality
 - [ ] Add project archive feature (instead of delete)

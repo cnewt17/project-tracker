@@ -52,6 +52,26 @@ async function initializeSchema(database: Database) {
     )
   `);
 
+  // Create milestones table with sequence
+  await database.run(`
+    CREATE SEQUENCE IF NOT EXISTS milestones_id_seq START 1
+  `);
+
+  await database.run(`
+    CREATE TABLE IF NOT EXISTS milestones (
+      id INTEGER PRIMARY KEY DEFAULT nextval('milestones_id_seq'),
+      project_id INTEGER NOT NULL,
+      name VARCHAR NOT NULL,
+      description TEXT,
+      due_date DATE NOT NULL,
+      status VARCHAR NOT NULL DEFAULT 'pending',
+      progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES projects(id)
+    )
+  `);
+
   console.log("Database schema initialized");
 }
 

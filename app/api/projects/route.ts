@@ -20,7 +20,31 @@ export async function GET(request: NextRequest) {
     query += " ORDER BY created_at DESC";
 
     const projects = await db.all(query, ...params);
-    return NextResponse.json(projects);
+
+    // Fetch milestone stats for each project
+    const projectsWithMilestones = await Promise.all(
+      projects.map(async (project: any) => {
+        const milestones = await db.all(
+          "SELECT status, progress FROM milestones WHERE project_id = ?",
+          project.id,
+        );
+
+        const totalMilestones = milestones.length;
+        const completedMilestones = milestones.filter(
+          (m: any) => m.status === "completed",
+        ).length;
+
+        return {
+          ...project,
+          milestoneStats: {
+            total: totalMilestones,
+            completed: completedMilestones,
+          },
+        };
+      }),
+    );
+
+    return NextResponse.json(projectsWithMilestones);
   } catch (error) {
     console.error("Error fetching projects:", error);
     return NextResponse.json(
