@@ -76,8 +76,10 @@ export default function Dashboard() {
               size="lg"
               className="shadow-sm hover:shadow-md"
             >
-              <Plus className="w-5 h-5" />
-              New Project
+              <span className="flex items-center gap-2">
+                <Plus className="w-5 h-5" />
+                New Project
+              </span>
             </Button>
           </Link>
         </div>
@@ -204,8 +206,10 @@ export default function Dashboard() {
               </p>
               <Link href="/projects/new">
                 <Button variant="primary" size="md">
-                  <Plus className="w-5 h-5" />
-                  Create Project
+                  <span className="flex items-center gap-2">
+                    <Plus className="w-5 h-5" />
+                    Create Project
+                  </span>
                 </Button>
               </Link>
             </div>

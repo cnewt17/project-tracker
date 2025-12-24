@@ -17,6 +17,10 @@ import {
   Loader2,
   X,
   Flag,
+  Edit,
+  Archive,
+  ArchiveRestore,
+  Copy,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -225,6 +229,56 @@ export default function ProjectDetailPage({
     setEditingMilestone(null);
   }
 
+  async function handleArchiveToggle() {
+    const action = project?.archived ? "unarchive" : "archive";
+    if (!confirm(`Are you sure you want to ${action} this project?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/projects/${resolvedParams.id}/archive`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archived: !project?.archived }),
+      });
+
+      if (res.ok) {
+        fetchProject();
+      } else {
+        alert(`Failed to ${action} project`);
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing project:`, error);
+      alert(`Failed to ${action} project`);
+    }
+  }
+
+  async function handleDuplicate() {
+    if (
+      !confirm(
+        "Duplicate this project? This will copy all resources and milestones.",
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/projects/${resolvedParams.id}/duplicate`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        const newProject = await res.json();
+        router.push(`/projects/${newProject.id}`);
+      } else {
+        alert("Failed to duplicate project");
+      }
+    } catch (error) {
+      console.error("Error duplicating project:", error);
+      alert("Failed to duplicate project");
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -275,6 +329,45 @@ export default function ProjectDetailPage({
                   <p className="leading-relaxed">{project.description}</p>
                 </div>
               )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link href={`/projects/${project.id}/edit`}>
+                <Button variant="secondary" size="sm" className="shadow-sm">
+                  <span className="flex items-center gap-1.5">
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </span>
+                </Button>
+              </Link>
+              <Button
+                onClick={handleDuplicate}
+                variant="ghost"
+                size="sm"
+                className="shadow-sm border border-slate-300 dark:border-slate-600"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Copy className="w-4 h-4" />
+                  Duplicate
+                </span>
+              </Button>
+              <Button
+                onClick={handleArchiveToggle}
+                variant="ghost"
+                size="sm"
+                className="shadow-sm border border-slate-300 dark:border-slate-600"
+              >
+                {project.archived ? (
+                  <span className="flex items-center gap-1.5">
+                    <ArchiveRestore className="w-4 h-4" />
+                    Unarchive
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5">
+                    <Archive className="w-4 h-4" />
+                    Archive
+                  </span>
+                )}
+              </Button>
             </div>
           </div>
 
@@ -333,15 +426,15 @@ export default function ProjectDetailPage({
               className="shadow-sm hover:shadow-md"
             >
               {showResourceForm ? (
-                <>
+                <span className="flex items-center gap-2">
                   <X className="w-5 h-5" />
                   Cancel
-                </>
+                </span>
               ) : (
-                <>
+                <span className="flex items-center gap-2">
                   <Plus className="w-5 h-5" />
                   Add Resource
-                </>
+                </span>
               )}
             </Button>
           </div>
@@ -452,8 +545,10 @@ export default function ProjectDetailPage({
               </div>
 
               <Button type="submit" variant="primary" size="md">
-                <Plus className="w-5 h-5" />
-                Add Resource
+                <span className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Add Resource
+                </span>
               </Button>
             </form>
           )}
@@ -491,15 +586,15 @@ export default function ProjectDetailPage({
               className="shadow-sm hover:shadow-md"
             >
               {showMilestoneForm ? (
-                <>
+                <span className="flex items-center gap-2">
                   <X className="w-5 h-5" />
                   Cancel
-                </>
+                </span>
               ) : (
-                <>
+                <span className="flex items-center gap-2">
                   <Plus className="w-5 h-5" />
                   Add Milestone
-                </>
+                </span>
               )}
             </Button>
           </div>
@@ -544,8 +639,10 @@ export default function ProjectDetailPage({
                 variant="primary"
                 size="md"
               >
-                <Plus className="w-5 h-5" />
-                Add First Milestone
+                <span className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Add First Milestone
+                </span>
               </Button>
             </div>
           )}
