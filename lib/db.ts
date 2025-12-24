@@ -27,6 +27,7 @@ async function initializeSchema(database: Database) {
       start_date DATE NOT NULL,
       end_date DATE,
       description TEXT,
+      archived BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

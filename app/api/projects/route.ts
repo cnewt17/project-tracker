@@ -8,13 +8,24 @@ export async function GET(request: NextRequest) {
     const db = await getDatabase();
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
+    const includeArchived = searchParams.get("archived") === "true";
 
     let query = "SELECT * FROM projects";
     const params: any[] = [];
+    const conditions: string[] = [];
+
+    // Exclude archived projects by default
+    if (!includeArchived) {
+      conditions.push("archived = FALSE");
+    }
 
     if (status) {
-      query += " WHERE status = ?";
+      conditions.push("status = ?");
       params.push(status);
+    }
+
+    if (conditions.length > 0) {
+      query += " WHERE " + conditions.join(" AND ");
     }
 
     query += " ORDER BY created_at DESC";

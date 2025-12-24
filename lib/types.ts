@@ -5,6 +5,7 @@ export interface Project {
   start_date: string;
   end_date: string | null;
   description: string | null;
+  archived: boolean;
   created_at: string;
   updated_at: string;
 }
