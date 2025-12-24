@@ -13,6 +13,9 @@ import {
   Plus,
   BarChart3,
   Loader2,
+  Download,
+  Search,
+  Archive,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -46,6 +49,54 @@ export default function Dashboard() {
     }
   }
 
+  async function exportProjectsToCSV() {
+    try {
+      const res = await fetch("/api/projects");
+      const projects = await res.json();
+
+      // Create CSV content
+      const headers = [
+        "ID",
+        "Name",
+        "Status",
+        "Start Date",
+        "End Date",
+        "Description",
+        "Milestones",
+      ];
+      const rows = projects.map((project: any) => [
+        project.id,
+        `"${project.name}"`,
+        project.status,
+        project.start_date,
+        project.end_date || "",
+        `"${project.description || ""}"`,
+        project.milestoneStats
+          ? `${project.milestoneStats.completed}/${project.milestoneStats.total}`
+          : "0/0",
+      ]);
+
+      const csvContent = [
+        headers.join(","),
+        ...rows.map((row: any[]) => row.join(",")),
+      ].join("\n");
+
+      // Download CSV
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `projects-export-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting projects:", error);
+      alert("Failed to export projects");
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -61,27 +112,73 @@ export default function Dashboard() {
     <PageTransition>
       <div className="space-y-12">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 mb-2">
-              Dashboard
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              Track your projects at a glance
-            </p>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50 mb-2">
+                Dashboard
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400">
+                Track your projects at a glance
+              </p>
+            </div>
+            <Link href="/projects/new">
+              <Button
+                variant="primary"
+                size="lg"
+                className="shadow-sm hover:shadow-md"
+              >
+                <span className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  New Project
+                </span>
+              </Button>
+            </Link>
           </div>
-          <Link href="/projects/new">
-            <Button
-              variant="primary"
-              size="lg"
-              className="shadow-sm hover:shadow-md"
-            >
-              <span className="flex items-center gap-2">
-                <Plus className="w-5 h-5" />
-                New Project
-              </span>
-            </Button>
-          </Link>
+
+          {/* Quick Actions */}
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
+              Quick Actions
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              <Link href="/projects">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="border border-slate-300 dark:border-slate-600"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Search className="w-4 h-4" />
+                    Browse Projects
+                  </span>
+                </Button>
+              </Link>
+              <Button
+                onClick={exportProjectsToCSV}
+                variant="ghost"
+                size="sm"
+                className="border border-slate-300 dark:border-slate-600"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Download className="w-4 h-4" />
+                  Export to CSV
+                </span>
+              </Button>
+              <Link href="/projects?archived=true">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="border border-slate-300 dark:border-slate-600"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Archive className="w-4 h-4" />
+                    View Archived
+                  </span>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {stats && (
