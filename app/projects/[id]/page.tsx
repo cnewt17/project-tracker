@@ -227,7 +227,7 @@ export default function ProjectDetailPage({
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-                  Resources
+                  Project team
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
                   {project.resources.length} assigned
