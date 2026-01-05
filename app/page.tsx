@@ -233,37 +233,61 @@ export default function Dashboard() {
                   Projects by Status
                 </h2>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800 hover:shadow-md transition-all">
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-400 mb-2">
-                    📋 Planning
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gray-50 dark:bg-gray-900/20 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-400 mb-2">
+                    ✅ Completed
                   </p>
-                  <p className="text-3xl font-bold text-blue-900 dark:text-blue-300">
-                    {stats.projectsByStatus.Planning}
+                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-300">
+                    {stats.projectsByStatus.Completed}
                   </p>
                 </div>
-                <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800 hover:shadow-md transition-all">
-                  <p className="text-sm font-medium text-green-700 dark:text-green-400 mb-2">
+                <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-2">
                     🚀 Active
                   </p>
-                  <p className="text-3xl font-bold text-green-900 dark:text-green-300">
+                  <p className="text-2xl font-bold text-green-900 dark:text-green-300">
                     {stats.projectsByStatus.Active}
                   </p>
                 </div>
-                <div className="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-lg border border-amber-200 dark:border-amber-800 hover:shadow-md transition-all">
-                  <p className="text-sm font-medium text-amber-700 dark:text-amber-400 mb-2">
-                    ⏸️ On Hold
+                <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-red-700 dark:text-red-400 mb-2">
+                    🚫 Blocked
                   </p>
-                  <p className="text-3xl font-bold text-amber-900 dark:text-amber-300">
-                    {stats.projectsByStatus["On Hold"]}
+                  <p className="text-2xl font-bold text-red-900 dark:text-red-300">
+                    {stats.projectsByStatus.Blocked}
                   </p>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-900/20 p-6 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-                    ✅ Completed
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-blue-700 dark:text-blue-400 mb-2">
+                    ✔️ Ready
                   </p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-300">
-                    {stats.projectsByStatus.Completed}
+                  <p className="text-2xl font-bold text-blue-900 dark:text-blue-300">
+                    {stats.projectsByStatus.Ready}
+                  </p>
+                </div>
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-amber-700 dark:text-amber-400 mb-2">
+                    ⏳ Pending Sale
+                  </p>
+                  <p className="text-2xl font-bold text-amber-900 dark:text-amber-300">
+                    {stats.projectsByStatus["Pending Sale Confirmation"]}
+                  </p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900/20 p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-slate-700 dark:text-slate-400 mb-2">
+                    ❌ Cancelled
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-300">
+                    {stats.projectsByStatus.Cancelled}
+                  </p>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800 hover:shadow-md transition-all">
+                  <p className="text-xs font-medium text-purple-700 dark:text-purple-400 mb-2">
+                    📊 Sales Pipeline
+                  </p>
+                  <p className="text-2xl font-bold text-purple-900 dark:text-purple-300">
+                    {stats.projectsByStatus["Sales Pipeline"]}
                   </p>
                 </div>
               </div>

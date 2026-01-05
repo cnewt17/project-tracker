@@ -21,7 +21,7 @@ export default function NewProjectPage() {
   const toast = useToast();
   const [formData, setFormData] = useState({
     name: "",
-    status: "Planning",
+    status: "Ready",
     start_date: "",
     end_date: "",
     description: "",
@@ -118,10 +118,15 @@ export default function NewProjectPage() {
               }
               className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
             >
-              <option value="Planning">📋 Planning</option>
-              <option value="Active">🚀 Active</option>
-              <option value="On Hold">⏸️ On Hold</option>
               <option value="Completed">✅ Completed</option>
+              <option value="Active">🚀 Active</option>
+              <option value="Blocked">🚫 Blocked</option>
+              <option value="Ready">✔️ Ready</option>
+              <option value="Pending Sale Confirmation">
+                ⏳ Pending Sale Confirmation
+              </option>
+              <option value="Cancelled">❌ Cancelled</option>
+              <option value="Sales Pipeline">📊 Sales Pipeline</option>
             </select>
           </div>
 

@@ -1,7 +1,14 @@
 export interface Project {
   id: number;
   name: string;
-  status: "Planning" | "Active" | "On Hold" | "Completed";
+  status:
+    | "Completed"
+    | "Active"
+    | "Blocked"
+    | "Ready"
+    | "Pending Sale Confirmation"
+    | "Cancelled"
+    | "Sales Pipeline";
   start_date: string;
   end_date: string | null;
   description: string | null;
@@ -28,10 +35,13 @@ export interface DashboardStats {
   totalResources: number;
   overAllocatedResources: number;
   projectsByStatus: {
-    Planning: number;
-    Active: number;
-    "On Hold": number;
     Completed: number;
+    Active: number;
+    Blocked: number;
+    Ready: number;
+    "Pending Sale Confirmation": number;
+    Cancelled: number;
+    "Sales Pipeline": number;
   };
 }
 
