@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/useToast";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -17,6 +18,7 @@ import PageTransition from "@/components/PageTransition";
 
 export default function NewProjectPage() {
   const router = useRouter();
+  const toast = useToast();
   const [formData, setFormData] = useState({
     name: "",
     status: "Planning",
@@ -43,14 +45,15 @@ export default function NewProjectPage() {
 
       if (res.ok) {
         const project = await res.json();
+        toast.success("Project created successfully");
         router.push(`/projects/${project.id}`);
       } else {
         const error = await res.json();
-        alert(error.error || "Failed to create project");
+        toast.error(error.error || "Failed to create project");
       }
     } catch (error) {
       console.error("Error creating project:", error);
-      alert("Failed to create project");
+      toast.error("Failed to create project");
     } finally {
       setSubmitting(false);
     }

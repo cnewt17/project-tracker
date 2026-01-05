@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/useToast";
 import { Project } from "@/lib/types";
 import Link from "next/link";
 import { use } from "react";
@@ -16,6 +17,7 @@ export default function EditProjectPage({
 }) {
   const resolvedParams = use(params);
   const router = useRouter();
+  const toast = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -73,14 +75,15 @@ export default function EditProjectPage({
       });
 
       if (res.ok) {
+        toast.success("Project updated successfully");
         router.push(`/projects/${resolvedParams.id}`);
       } else {
         const error = await res.json();
-        alert(error.error || "Failed to update project");
+        toast.error(error.error || "Failed to update project");
       }
     } catch (error) {
       console.error("Error updating project:", error);
-      alert("Failed to update project");
+      toast.error("Failed to update project");
     } finally {
       setSaving(false);
     }

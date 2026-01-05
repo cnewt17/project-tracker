@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
+import { ToastProvider } from "@/lib/useToast";
 import Navigation from "@/components/Navigation";
 
 export const metadata: Metadata = {
@@ -17,10 +18,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
         <ThemeProvider>
-          <Navigation />
-          <main className="container mx-auto px-6 py-8 max-w-7xl">
-            {children}
-          </main>
+          <ToastProvider>
+            <Navigation />
+            <main className="container mx-auto px-6 py-8 max-w-7xl">
+              {children}
+            </main>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
