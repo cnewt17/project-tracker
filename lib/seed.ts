@@ -23,17 +23,18 @@ export async function seedDatabase() {
     },
     {
       name: "Mobile App Development",
-      status: "Planning",
+      status: "Ready",
       start_date: "2025-02-01",
       end_date: null,
       description: "Native mobile app for iOS and Android platforms",
     },
     {
       name: "API Integration",
-      status: "On Hold",
+      status: "Blocked",
       start_date: "2024-11-01",
       end_date: "2025-01-31",
-      description: "Integration with third-party payment and analytics APIs",
+      description:
+        "Integration with third-party payment and analytics APIs - waiting on vendor approval",
     },
     {
       name: "Database Migration",
@@ -41,6 +42,28 @@ export async function seedDatabase() {
       start_date: "2024-09-01",
       end_date: "2024-12-15",
       description: "Migration from legacy database to modern cloud solution",
+    },
+    {
+      name: "Enterprise CRM System",
+      status: "Pending Sale Confirmation",
+      start_date: "2025-03-01",
+      end_date: "2025-09-30",
+      description:
+        "Custom CRM solution for enterprise client - awaiting contract signature",
+    },
+    {
+      name: "Marketing Campaign Platform",
+      status: "Sales Pipeline",
+      start_date: "2025-04-01",
+      end_date: null,
+      description: "Automated marketing platform in early sales discussions",
+    },
+    {
+      name: "Legacy System Upgrade",
+      status: "Cancelled",
+      start_date: "2024-10-01",
+      end_date: null,
+      description: "Project cancelled due to client budget constraints",
     },
   ];
 
@@ -60,8 +83,8 @@ export async function seedDatabase() {
     const projectId = result[0].id;
     console.log(`Created project: ${project.name} (ID: ${projectId})`);
 
-    // Add resources for active and planning projects
-    if (project.status === "Active" || project.status === "Planning") {
+    // Add resources for active and ready projects
+    if (project.status === "Active" || project.status === "Ready") {
       const resources = [
         {
           name: "John Doe",

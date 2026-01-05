@@ -43,10 +43,13 @@ export async function GET() {
     `);
 
     const projectsByStatus = {
-      Planning: 0,
-      Active: 0,
-      "On Hold": 0,
       Completed: 0,
+      Active: 0,
+      Blocked: 0,
+      Ready: 0,
+      "Pending Sale Confirmation": 0,
+      Cancelled: 0,
+      "Sales Pipeline": 0,
     };
 
     statusBreakdown.forEach((row: any) => {
