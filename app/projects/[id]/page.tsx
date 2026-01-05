@@ -6,6 +6,9 @@ import { Project, Resource, Milestone } from "@/lib/types";
 import ResourceTable from "@/components/ResourceTable";
 import MilestoneCard from "@/components/MilestoneCard";
 import MilestoneForm from "@/components/MilestoneForm";
+import ConfirmDialog from "@/components/ConfirmDialog";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { useToast } from "@/lib/useToast";
 import Link from "next/link";
 import { use } from "react";
 import {
@@ -47,6 +50,7 @@ export default function ProjectDetailPage({
 }) {
   const resolvedParams = use(params);
   const router = useRouter();
+  const toast = useToast();
   const [project, setProject] = useState<
     (Project & { resources: Resource[]; milestones: Milestone[] }) | null
   >(null);
@@ -64,6 +68,18 @@ export default function ProjectDetailPage({
     end_date: "",
   });
   const [allocationWarning, setAllocationWarning] = useState<string>("");
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    variant?: "danger" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
 
   useEffect(() => {
     fetchProject();
@@ -98,24 +114,30 @@ export default function ProjectDetailPage({
   }
 
   async function handleDeleteResource(resourceId: number) {
-    if (!confirm("Are you sure you want to delete this resource?")) {
-      return;
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: "Delete Resource",
+      message:
+        "Are you sure you want to delete this resource? This action cannot be undone.",
+      variant: "danger",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/resources/${resourceId}`, {
+            method: "DELETE",
+          });
 
-    try {
-      const res = await fetch(`/api/resources/${resourceId}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        fetchProject();
-      } else {
-        alert("Failed to delete resource");
-      }
-    } catch (error) {
-      console.error("Error deleting resource:", error);
-      alert("Failed to delete resource");
-    }
+          if (res.ok) {
+            toast.success("Resource deleted successfully");
+            fetchProject();
+          } else {
+            toast.error("Failed to delete resource");
+          }
+        } catch (error) {
+          console.error("Error deleting resource:", error);
+          toast.error("Failed to delete resource");
+        }
+      },
+    });
   }
 
   async function handleEditResource(
@@ -130,14 +152,15 @@ export default function ProjectDetailPage({
       });
 
       if (res.ok) {
+        toast.success("Resource updated successfully");
         fetchProject();
       } else {
         const error = await res.json();
-        alert(error.error || "Failed to update resource");
+        toast.error(error.error || "Failed to update resource");
       }
     } catch (error) {
       console.error("Error updating resource:", error);
-      alert("Failed to update resource");
+      toast.error("Failed to update resource");
     }
   }
 
@@ -192,6 +215,7 @@ export default function ProjectDetailPage({
       });
 
       if (res.ok) {
+        toast.success("Resource added successfully");
         setShowResourceForm(false);
         setResourceFormData({
           name: "",
@@ -203,11 +227,11 @@ export default function ProjectDetailPage({
         fetchProject();
       } else {
         const error = await res.json();
-        alert(error.error || "Failed to add resource");
+        toast.error(error.error || "Failed to add resource");
       }
     } catch (error) {
       console.error("Error adding resource:", error);
-      alert("Failed to add resource");
+      toast.error("Failed to add resource");
     }
   }
 
@@ -221,12 +245,13 @@ export default function ProjectDetailPage({
         });
 
         if (res.ok) {
+          toast.success("Milestone updated successfully");
           setShowMilestoneForm(false);
           setEditingMilestone(null);
           fetchProject();
         } else {
           const error = await res.json();
-          alert(error.error || "Failed to update milestone");
+          toast.error(error.error || "Failed to update milestone");
         }
       } else {
         const res = await fetch("/api/milestones", {
@@ -236,38 +261,45 @@ export default function ProjectDetailPage({
         });
 
         if (res.ok) {
+          toast.success("Milestone created successfully");
           setShowMilestoneForm(false);
           fetchProject();
         } else {
           const error = await res.json();
-          alert(error.error || "Failed to create milestone");
+          toast.error(error.error || "Failed to create milestone");
         }
       }
     } catch (error) {
       console.error("Error with milestone:", error);
-      alert("Failed to save milestone");
+      toast.error("Failed to save milestone");
     }
   }
 
   async function handleDeleteMilestone(milestoneId: number) {
-    if (!confirm("Are you sure you want to delete this milestone?")) {
-      return;
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: "Delete Milestone",
+      message:
+        "Are you sure you want to delete this milestone? This action cannot be undone.",
+      variant: "danger",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/milestones/${milestoneId}`, {
+            method: "DELETE",
+          });
 
-    try {
-      const res = await fetch(`/api/milestones/${milestoneId}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        fetchProject();
-      } else {
-        alert("Failed to delete milestone");
-      }
-    } catch (error) {
-      console.error("Error deleting milestone:", error);
-      alert("Failed to delete milestone");
-    }
+          if (res.ok) {
+            toast.success("Milestone deleted successfully");
+            fetchProject();
+          } else {
+            toast.error("Failed to delete milestone");
+          }
+        } catch (error) {
+          console.error("Error deleting milestone:", error);
+          toast.error("Failed to delete milestone");
+        }
+      },
+    });
   }
 
   async function handleUpdateProgress(milestoneId: number, progress: number) {
@@ -298,52 +330,65 @@ export default function ProjectDetailPage({
 
   async function handleArchiveToggle() {
     const action = project?.archived ? "unarchive" : "archive";
-    if (!confirm(`Are you sure you want to ${action} this project?`)) {
-      return;
-    }
+    setConfirmDialog({
+      isOpen: true,
+      title: `${action.charAt(0).toUpperCase() + action.slice(1)} Project`,
+      message: `Are you sure you want to ${action} this project?`,
+      variant: "warning",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(
+            `/api/projects/${resolvedParams.id}/archive`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ archived: !project?.archived }),
+            },
+          );
 
-    try {
-      const res = await fetch(`/api/projects/${resolvedParams.id}/archive`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ archived: !project?.archived }),
-      });
-
-      if (res.ok) {
-        fetchProject();
-      } else {
-        alert(`Failed to ${action} project`);
-      }
-    } catch (error) {
-      console.error(`Error ${action}ing project:`, error);
-      alert(`Failed to ${action} project`);
-    }
+          if (res.ok) {
+            toast.success(`Project ${action}d successfully`);
+            fetchProject();
+          } else {
+            toast.error(`Failed to ${action} project`);
+          }
+        } catch (error) {
+          console.error(`Error ${action}ing project:`, error);
+          toast.error(`Failed to ${action} project`);
+        }
+      },
+    });
   }
 
   async function handleDuplicate() {
-    if (
-      !confirm(
+    setConfirmDialog({
+      isOpen: true,
+      title: "Duplicate Project",
+      message:
         "Duplicate this project? This will copy all resources and milestones.",
-      )
-    ) {
-      return;
-    }
+      variant: "info",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(
+            `/api/projects/${resolvedParams.id}/duplicate`,
+            {
+              method: "POST",
+            },
+          );
 
-    try {
-      const res = await fetch(`/api/projects/${resolvedParams.id}/duplicate`, {
-        method: "POST",
-      });
-
-      if (res.ok) {
-        const newProject = await res.json();
-        router.push(`/projects/${newProject.id}`);
-      } else {
-        alert("Failed to duplicate project");
-      }
-    } catch (error) {
-      console.error("Error duplicating project:", error);
-      alert("Failed to duplicate project");
-    }
+          if (res.ok) {
+            const newProject = await res.json();
+            toast.success("Project duplicated successfully");
+            router.push(`/projects/${newProject.id}`);
+          } else {
+            toast.error("Failed to duplicate project");
+          }
+        } catch (error) {
+          console.error("Error duplicating project:", error);
+          toast.error("Failed to duplicate project");
+        }
+      },
+    });
   }
 
   if (loading) {
@@ -724,6 +769,14 @@ export default function ProjectDetailPage({
           )}
         </div>
       </div>
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        variant={confirmDialog.variant}
+      />
     </PageTransition>
   );
 }

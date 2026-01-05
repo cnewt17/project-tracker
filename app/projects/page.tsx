@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { SkeletonCard } from "@/components/Skeleton";
 import ConfirmModal from "@/components/ConfirmModal";
-import { ToastContainer } from "@/components/Toast";
 import { useToast } from "@/lib/useToast";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -35,7 +34,7 @@ export default function ProjectsPage() {
     isOpen: false,
     projectId: null,
   });
-  const { toasts, toast, removeToast } = useToast();
+  const toast = useToast();
 
   useEffect(() => {
     fetchProjects();
@@ -162,7 +161,6 @@ export default function ProjectsPage() {
 
   return (
     <PageTransition>
-      <ToastContainer toasts={toasts} onClose={removeToast} />
       <ConfirmModal
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, projectId: null })}
