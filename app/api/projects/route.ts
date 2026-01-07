@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { Project, CreateProjectInput } from "@/lib/types";
+import { PROJECT_STATUSES } from "@/lib/constants";
 
 // GET /api/projects - List all projects with optional status filter
 export async function GET(request: NextRequest) {
@@ -80,7 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate status
-    const validStatuses = ["Planning", "Active", "On Hold", "Completed"];
+    const validStatuses = PROJECT_STATUSES.map((s) => s.value);
     if (!validStatuses.includes(body.status)) {
       return NextResponse.json(
         {

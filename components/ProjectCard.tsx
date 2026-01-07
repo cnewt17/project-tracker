@@ -1,4 +1,5 @@
 import { Project } from "@/lib/types";
+import { getStatusColor, getStatusIcon } from "@/lib/constants";
 import Link from "next/link";
 import { Calendar, FolderOpen, Trash2, Flag } from "lucide-react";
 import Button from "./Button";
@@ -12,33 +13,6 @@ interface ProjectCardProps {
   };
   onDelete?: (id: number) => void;
 }
-
-const statusColors = {
-  Completed:
-    "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300 dark:border-gray-700",
-  Active:
-    "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800",
-  Blocked:
-    "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800",
-  Ready:
-    "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800",
-  "Pending Sale Confirmation":
-    "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800",
-  Cancelled:
-    "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/20 dark:text-slate-300 dark:border-slate-700",
-  "Sales Pipeline":
-    "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800",
-};
-
-const statusIcons = {
-  Completed: "✅",
-  Active: "🚀",
-  Blocked: "🚫",
-  Ready: "✔️",
-  "Pending Sale Confirmation": "⏳",
-  Cancelled: "❌",
-  "Sales Pipeline": "📊",
-};
 
 export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
   return (
@@ -58,9 +32,9 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
           </div>
         </Link>
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold border ${statusColors[project.status]} flex items-center gap-1 whitespace-nowrap ml-3`}
+          className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(project.status, "light")} flex items-center gap-1 whitespace-nowrap ml-3`}
         >
-          <span>{statusIcons[project.status]}</span>
+          <span>{getStatusIcon(project.status)}</span>
           {project.status}
         </span>
       </div>

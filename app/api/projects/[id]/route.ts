@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { UpdateProjectInput } from "@/lib/types";
+import { PROJECT_STATUSES } from "@/lib/constants";
 
 // GET /api/projects/[id] - Get single project with resources
 export async function GET(
@@ -63,7 +64,7 @@ export async function PUT(
 
     // Validate status if provided
     if (body.status) {
-      const validStatuses = ["Planning", "Active", "On Hold", "Completed"];
+      const validStatuses = PROJECT_STATUSES.map((s) => s.value);
       if (!validStatuses.includes(body.status)) {
         return NextResponse.json(
           {
