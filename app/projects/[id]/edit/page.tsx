@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/lib/useToast";
 import { Project } from "@/lib/types";
+import { PROJECT_STATUSES } from "@/lib/constants";
 import Link from "next/link";
 import { use } from "react";
 import { ArrowLeft, Loader2, Save } from "lucide-react";
@@ -164,15 +165,11 @@ export default function EditProjectPage({
                 }
                 className="w-full border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-50 bg-white dark:bg-slate-900"
               >
-                <option value="Completed">✅ Completed</option>
-                <option value="Active">🚀 Active</option>
-                <option value="Blocked">🚫 Blocked</option>
-                <option value="Ready">✔️ Ready</option>
-                <option value="Pending Sale Confirmation">
-                  ⏳ Pending Sale Confirmation
-                </option>
-                <option value="Cancelled">❌ Cancelled</option>
-                <option value="Sales Pipeline">📊 Sales Pipeline</option>
+                {PROJECT_STATUSES.map((status) => (
+                  <option key={status.value} value={status.value}>
+                    {status.icon} {status.label}
+                  </option>
+                ))}
               </select>
             </div>
 

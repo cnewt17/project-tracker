@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Project } from "@/lib/types";
+import { PROJECT_STATUSES } from "@/lib/constants";
 import ProjectCard from "@/components/ProjectCard";
 import Link from "next/link";
 import {
@@ -118,28 +119,11 @@ export default function ProjectsPage() {
     }
   }
 
-  const statusBadges = [
-    {
-      value: "Planning",
-      label: "📋 Planning",
-      color: "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100",
-    },
-    {
-      value: "Active",
-      label: "🚀 Active",
-      color: "bg-green-50 border-green-200 text-green-700 hover:bg-green-100",
-    },
-    {
-      value: "On Hold",
-      label: "⏸️ On Hold",
-      color: "bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100",
-    },
-    {
-      value: "Completed",
-      label: "✅ Completed",
-      color: "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100",
-    },
-  ];
+  const statusBadges = PROJECT_STATUSES.map((status) => ({
+    value: status.value,
+    label: `${status.icon} ${status.label}`,
+    color: status.color.badge,
+  }));
 
   if (loading) {
     return (
@@ -264,7 +248,19 @@ export default function ProjectsPage() {
                   size="sm"
                   className={`border ${
                     statusFilter === badge.value
-                      ? `${badge.color} shadow-md ring-2 ring-offset-2 ${badge.value === "Planning" ? "ring-blue-300" : badge.value === "Active" ? "ring-green-300" : badge.value === "On Hold" ? "ring-amber-300" : "ring-gray-300"}`
+                      ? `${badge.color} shadow-md ring-2 ring-offset-2 ${
+                          badge.value === "Ready"
+                            ? "ring-blue-300"
+                            : badge.value === "Active"
+                              ? "ring-green-300"
+                              : badge.value === "Blocked"
+                                ? "ring-red-300"
+                                : badge.value === "Pending Sale Confirmation"
+                                  ? "ring-amber-300"
+                                  : badge.value === "Sales Pipeline"
+                                    ? "ring-purple-300"
+                                    : "ring-gray-300"
+                        }`
                       : badge.color
                   }`}
                 >
