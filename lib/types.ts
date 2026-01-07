@@ -88,3 +88,27 @@ export type CreateProjectStatusUpdateInput = Omit<
   ProjectStatusUpdate,
   "id" | "created_at"
 >;
+
+export interface ProjectReportData {
+  metadata: {
+    generatedAt: string;
+    reportDate: string;
+  };
+  kpis: {
+    activeProjects: number;
+    blockedProjects: number;
+    pendingProjects: number;
+  };
+  activeProjects: Array<{
+    id: number;
+    name: string;
+    endDate: string | null;
+    ragStatus: string;
+    latestComment: string | null;
+  }>;
+  pendingProjects: Array<{
+    id: number;
+    name: string;
+    status: string;
+  }>;
+}

@@ -99,20 +99,20 @@ A Next.js application for tracking projects and their resource allocation, desig
 
 ### 4. Reporting
 **Requirements:**
-- Generate reports on project progress and resource utilization
+- Generate a report on detailing the current state of projects
 - Reports should include:
   - Three KPI boxes listing:
-    - Total number of active projects
-    - Total number of blocked projects
+    - Total number of Active projects
+    - Total number of Blocked projects
     - Total number of Pending projects (Pending Sales + Sales pipeline)
   - List Active Projects showing:
     - Project name
-    - Project RAG status
     - Project end date
-    - Project status summary
-    - Project progress percentage
+    - The most recent RAG status
+    - The most recent status update
   - List Pending Projects showing just the name
 - Reports will be generated in an HTML format
+- The report will be downloaded to the user's device
 
 **User Stories:**
 - As a user, I can generate project progress reports

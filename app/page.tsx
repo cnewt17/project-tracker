@@ -16,15 +16,20 @@ import {
   Download,
   Search,
   Archive,
+  FileDown,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
 import StaggeredFadeIn from "@/components/StaggeredFadeIn";
+import { generateProjectReportHTML } from "@/lib/generateProjectReport";
+import { useToast } from "@/lib/useToast";
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     fetchDashboardData();
@@ -97,6 +102,39 @@ export default function Dashboard() {
     }
   }
 
+  async function exportProjectReport() {
+    setIsGeneratingReport(true);
+
+    try {
+      // Fetch report data
+      const res = await fetch("/api/reports/projects");
+      if (!res.ok) throw new Error("Failed to fetch report data");
+
+      const data = await res.json();
+
+      // Generate HTML
+      const html = generateProjectReportHTML(data);
+
+      // Create blob and download
+      const blob = new Blob([html], { type: "text/html" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `project-report-${new Date().toISOString().split("T")[0]}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Report downloaded successfully");
+    } catch (error) {
+      console.error("Error generating report:", error);
+      toast.error("Failed to generate report");
+    } finally {
+      setIsGeneratingReport(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -163,6 +201,22 @@ export default function Dashboard() {
                 <span className="flex items-center gap-1.5">
                   <Download className="w-4 h-4" />
                   Export to CSV
+                </span>
+              </Button>
+              <Button
+                onClick={exportProjectReport}
+                variant="ghost"
+                size="sm"
+                disabled={isGeneratingReport}
+                className="border border-slate-300 dark:border-slate-600"
+              >
+                <span className="flex items-center gap-1.5">
+                  {isGeneratingReport ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <FileDown className="w-4 h-4" />
+                  )}
+                  Export HTML Report
                 </span>
               </Button>
               <Link href="/projects?archived=true">
