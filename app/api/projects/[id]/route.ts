@@ -32,7 +32,17 @@ export async function GET(
       id,
     );
 
-    return NextResponse.json({ ...project, resources, milestones });
+    const statusUpdates = await db.all(
+      "SELECT * FROM project_status_updates WHERE project_id = ? ORDER BY created_at DESC",
+      id,
+    );
+
+    return NextResponse.json({
+      ...project,
+      resources,
+      milestones,
+      statusUpdates,
+    });
   } catch (error) {
     console.error("Error fetching project:", error);
     return NextResponse.json(

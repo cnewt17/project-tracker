@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Project, Resource, Milestone } from "@/lib/types";
+import { Project, Resource, Milestone, ProjectStatusUpdate } from "@/lib/types";
 import ResourceTable from "@/components/ResourceTable";
 import MilestoneCard from "@/components/MilestoneCard";
 import MilestoneForm from "@/components/MilestoneForm";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import RagStatusDot from "@/components/RagStatusDot";
+import RagStatusTimeline from "@/components/RagStatusTimeline";
+import UpdateRagStatusModal from "@/components/UpdateRagStatusModal";
 import { useToast } from "@/lib/useToast";
 import Link from "next/link";
 import { use } from "react";
@@ -25,6 +28,7 @@ import {
   ArchiveRestore,
   Copy,
   AlertCircle,
+  TrendingUp,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -65,11 +69,17 @@ export default function ProjectDetailPage({
   const router = useRouter();
   const toast = useToast();
   const [project, setProject] = useState<
-    (Project & { resources: Resource[]; milestones: Milestone[] }) | null
+    | (Project & {
+        resources: Resource[];
+        milestones: Milestone[];
+        statusUpdates: ProjectStatusUpdate[];
+      })
+    | null
   >(null);
   const [loading, setLoading] = useState(true);
   const [showResourceForm, setShowResourceForm] = useState(false);
   const [showMilestoneForm, setShowMilestoneForm] = useState(false);
+  const [showRagStatusModal, setShowRagStatusModal] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(
     null,
   );
@@ -404,6 +414,30 @@ export default function ProjectDetailPage({
     });
   }
 
+  async function handleRagStatusUpdate(ragStatus: string, comment: string) {
+    try {
+      const res = await fetch(
+        `/api/projects/${resolvedParams.id}/status-updates`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rag_status: ragStatus, comment }),
+        },
+      );
+
+      if (res.ok) {
+        toast.success("RAG status updated successfully");
+        fetchProject();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to update RAG status");
+      }
+    } catch (error) {
+      console.error("Error updating RAG status:", error);
+      toast.error("Failed to update RAG status");
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -441,6 +475,7 @@ export default function ProjectDetailPage({
                 <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-50">
                   {project.name}
                 </h1>
+                <RagStatusDot status={project.rag_status} size="lg" />
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-semibold border ${statusColors[project.status]} flex items-center gap-1`}
                 >
@@ -493,6 +528,17 @@ export default function ProjectDetailPage({
                   </span>
                 )}
               </Button>
+              <Button
+                onClick={() => setShowRagStatusModal(true)}
+                variant="primary"
+                size="sm"
+                className="shadow-sm"
+              >
+                <span className="flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4" />
+                  Update RAG Status
+                </span>
+              </Button>
             </div>
           </div>
 
@@ -529,6 +575,27 @@ export default function ProjectDetailPage({
             </div>
           )}
         </div>
+
+        {/* RAG Status Timeline Section */}
+        {project.statusUpdates && project.statusUpdates.length > 0 && (
+          <div className="bg-white dark:bg-slate-800 shadow-md rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-green-50 dark:bg-green-900/20 p-2 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+                  RAG Status History
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  {project.statusUpdates.length} update
+                  {project.statusUpdates.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            </div>
+            <RagStatusTimeline updates={project.statusUpdates} />
+          </div>
+        )}
 
         {/* Resources Section */}
         <div>
@@ -791,6 +858,13 @@ export default function ProjectDetailPage({
         title={confirmDialog.title}
         message={confirmDialog.message}
         variant={confirmDialog.variant}
+      />
+      <UpdateRagStatusModal
+        isOpen={showRagStatusModal}
+        onClose={() => setShowRagStatusModal(false)}
+        onSubmit={handleRagStatusUpdate}
+        currentStatus={project.rag_status}
+        projectName={project.name}
       />
     </PageTransition>
   );
