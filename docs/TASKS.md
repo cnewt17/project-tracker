@@ -364,7 +364,8 @@
 
 ## Known Issues 🐛
 
-None currently identified.
+- [ ] Calendar buttons don't change colour when viewed in Dark Mode
+- [ ] The Projects page isn't using the updated project statuses  
 
 ---
 
