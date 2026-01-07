@@ -247,8 +247,8 @@
 ## Pending Tasks 📋
 
 ## Enhancements - Project Start Date Requirement
-- [ ] Remove the need to have a required start date for a project
-- [ ] When a project moves to the status active the start date should get update to the current date, but only if there is no start date already set.
+- [ ] Remove the need to have a required start date for a project 
+
 
 ### Enhancements - Data Validation
 - [ ] Add email validation for resource names (optional)
