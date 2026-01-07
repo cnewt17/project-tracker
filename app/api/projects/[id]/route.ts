@@ -76,6 +76,23 @@ export async function PUT(
       }
     }
 
+    // Validate date range if both dates are provided or being updated
+    const finalStartDate =
+      body.start_date !== undefined ? body.start_date : existing.start_date;
+    const finalEndDate =
+      body.end_date !== undefined ? body.end_date : existing.end_date;
+
+    if (finalStartDate && finalEndDate) {
+      const startDate = new Date(finalStartDate);
+      const endDate = new Date(finalEndDate);
+      if (endDate <= startDate) {
+        return NextResponse.json(
+          { error: "End date must be after start date" },
+          { status: 400 },
+        );
+      }
+    }
+
     // Build update query dynamically
     const updates: string[] = [];
     const values: any[] = [];

@@ -496,36 +496,38 @@ export default function ProjectDetailPage({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-                <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                  Start Date
-                </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-                  {new Date(project.start_date).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-            {project.end_date && (
+          {project.start_date && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
-                  <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                  <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
                   <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-                    End Date
+                    Start Date
                   </p>
                   <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-                    {new Date(project.end_date).toLocaleDateString()}
+                    {new Date(project.start_date).toLocaleDateString()}
                   </p>
                 </div>
               </div>
-            )}
-          </div>
+              {project.end_date && (
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+                    <Calendar className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+                      End Date
+                    </p>
+                    <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+                      {new Date(project.end_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Resources Section */}

@@ -246,6 +246,10 @@
 
 ## Pending Tasks 📋
 
+## Enhancements - Project Start Date Requirement
+- [x] Remove the need to have a required start date for a project 
+
+
 ### Enhancements - Data Validation
 - [ ] Add email validation for resource names (optional)
 - [ ] Add date range validation (end date > start date)

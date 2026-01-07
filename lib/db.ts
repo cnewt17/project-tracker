@@ -24,7 +24,7 @@ async function initializeSchema(database: Database) {
       id INTEGER PRIMARY KEY DEFAULT nextval('projects_id_seq'),
       name VARCHAR NOT NULL,
       status VARCHAR NOT NULL,
-      start_date DATE NOT NULL,
+      start_date DATE,
       end_date DATE,
       description TEXT,
       archived BOOLEAN DEFAULT FALSE,

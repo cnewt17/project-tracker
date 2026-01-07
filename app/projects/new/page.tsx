@@ -39,6 +39,7 @@ export default function NewProjectPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          start_date: formData.start_date || null,
           end_date: formData.end_date || null,
           description: formData.description || null,
         }),
@@ -132,11 +133,10 @@ export default function NewProjectPage() {
             <div>
               <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">
                 <Calendar className="w-4 h-4" />
-                Start Date *
+                Start Date (Optional)
               </label>
               <input
                 type="date"
-                required
                 value={formData.start_date}
                 onChange={(e) =>
                   setFormData({ ...formData, start_date: e.target.value })
