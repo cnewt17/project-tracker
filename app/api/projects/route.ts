@@ -73,9 +73,9 @@ export async function POST(request: NextRequest) {
     const body: CreateProjectInput = await request.json();
 
     // Validate required fields
-    if (!body.name || !body.status || !body.start_date) {
+    if (!body.name || !body.status) {
       return NextResponse.json(
-        { error: "Missing required fields: name, status, start_date" },
+        { error: "Missing required fields: name, status" },
         { status: 400 },
       );
     }
@@ -91,12 +91,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate date range if both dates are provided
+    if (body.start_date && body.end_date) {
+      const startDate = new Date(body.start_date);
+      const endDate = new Date(body.end_date);
+      if (endDate <= startDate) {
+        return NextResponse.json(
+          { error: "End date must be after start date" },
+          { status: 400 },
+        );
+      }
+    }
+
     await db.run(
       `INSERT INTO projects (name, status, start_date, end_date, description)
        VALUES (?, ?, ?, ?, ?)`,
       body.name,
       body.status,
-      body.start_date,
+      body.start_date || null,
       body.end_date || null,
       body.description || null,
     );

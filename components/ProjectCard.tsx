@@ -45,18 +45,20 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
         </p>
       )}
 
-      <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-        <div className="flex items-center gap-1">
-          <Calendar className="w-4 h-4" />
-          <span>{new Date(project.start_date).toLocaleDateString()}</span>
+      {project.start_date && (
+        <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <div className="flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            <span>{new Date(project.start_date).toLocaleDateString()}</span>
+          </div>
+          {project.end_date && (
+            <>
+              <span>→</span>
+              <span>{new Date(project.end_date).toLocaleDateString()}</span>
+            </>
+          )}
         </div>
-        {project.end_date && (
-          <>
-            <span>→</span>
-            <span>{new Date(project.end_date).toLocaleDateString()}</span>
-          </>
-        )}
-      </div>
+      )}
 
       {/* Milestone Progress */}
       {project.milestoneStats && project.milestoneStats.total > 0 && (

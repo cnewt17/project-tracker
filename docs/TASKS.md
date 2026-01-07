@@ -247,7 +247,7 @@
 ## Pending Tasks 📋
 
 ## Enhancements - Project Start Date Requirement
-- [ ] Remove the need to have a required start date for a project 
+- [x] Remove the need to have a required start date for a project 
 
 
 ### Enhancements - Data Validation

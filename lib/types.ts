@@ -9,7 +9,7 @@ export interface Project {
     | "Pending Sale Confirmation"
     | "Cancelled"
     | "Sales Pipeline";
-  start_date: string;
+  start_date: string | null;
   end_date: string | null;
   description: string | null;
   archived: boolean;

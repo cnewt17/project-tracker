@@ -69,7 +69,7 @@ export default function EditProjectPage({
         body: JSON.stringify({
           name: formData.name,
           status: formData.status,
-          start_date: formData.start_date,
+          start_date: formData.start_date || null,
           end_date: formData.end_date || null,
           description: formData.description || null,
         }),
@@ -179,12 +179,11 @@ export default function EditProjectPage({
                   htmlFor="start_date"
                   className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                 >
-                  Start Date *
+                  Start Date (Optional)
                 </label>
                 <input
                   type="date"
                   id="start_date"
-                  required
                   value={formData.start_date}
                   onChange={(e) =>
                     setFormData({ ...formData, start_date: e.target.value })

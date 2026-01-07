@@ -67,10 +67,18 @@ export default function ProjectsPage() {
         case "name-desc":
           return b.name.localeCompare(a.name);
         case "date-asc":
+          // Projects without start_date appear at the end
+          if (!a.start_date && !b.start_date) return 0;
+          if (!a.start_date) return 1; // a goes after b
+          if (!b.start_date) return -1; // a goes before b
           return (
             new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
           );
         case "date-desc":
+          // Projects without start_date appear at the end
+          if (!a.start_date && !b.start_date) return 0;
+          if (!a.start_date) return 1; // a goes after b
+          if (!b.start_date) return -1; // a goes before b
           return (
             new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
           );
