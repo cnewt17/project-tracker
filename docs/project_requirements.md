@@ -57,6 +57,12 @@ A Next.js application for tracking projects and their resource allocation, desig
 - As a user, I can track milestone status (in progress, completed)
 - As a user, I can set milestone due dates
 - As a user, I can view milestone progress bars
+- As a user, I can add a RAG status (Red, Amber, Green) to projects
+- As a user, I can view project RAG status
+- As a user, I can add a RAG status (Red, Amber, Green) to milestones
+- As a user, I can view milestone RAG status
+- As a user I can add a project status update
+- As a user I can view project status updates
 
 ### 2. Resource Management
 **Requirements:**
@@ -91,21 +97,31 @@ A Next.js application for tracking projects and their resource allocation, desig
 - As a user, I can see a dashboard with key metrics at a glance
 - As a user, I can identify resource conflicts or over-allocations
 
-## Database Schema
+### 4. Reporting
+**Requirements:**
+- Generate reports on project progress and resource utilization
+- Reports should include:
+  - Three KPI boxes listing:
+    - Total number of active projects
+    - Total number of blocked projects
+    - Total number of Pending projects (Pending Sales + Sales pipeline)
+  - List Active Projects showing:
+    - Project name
+    - Project RAG status
+    - Project end date
+    - Project status summary
+    - Project progress percentage
+  - List Pending Projects showing just the name
+- Reports will be generated in an HTML format
 
-### Projects Table
-```sql
-CREATE TABLE projects (
-  id INTEGER PRIMARY KEY,
-  name VARCHAR NOT NULL,
-  status VARCHAR NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE,
-  description TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+**User Stories:**
+- As a user, I can generate project progress reports
+- As a user, I can generate resource utilization reports
+- As a user, I can generate project status reports
+- As a user, I can generate resource allocation reports
+- As a user, I can click an Export Report Quick action button to generate the Report
+- As a user, I can add a project status update
+- As a user, I can view project status updates
 
 ### Resources Table
 ```sql

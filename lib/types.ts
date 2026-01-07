@@ -13,6 +13,7 @@ export interface Project {
   end_date: string | null;
   description: string | null;
   archived: boolean;
+  rag_status: "Red" | "Amber" | "Green" | "N/A";
   created_at: string;
   updated_at: string;
 }
@@ -74,3 +75,16 @@ export type CreateMilestoneInput = Omit<
   "id" | "created_at" | "updated_at"
 >;
 export type UpdateMilestoneInput = Partial<CreateMilestoneInput>;
+
+export interface ProjectStatusUpdate {
+  id: number;
+  project_id: number;
+  rag_status: "Red" | "Amber" | "Green" | "N/A";
+  comment: string | null;
+  created_at: string;
+}
+
+export type CreateProjectStatusUpdateInput = Omit<
+  ProjectStatusUpdate,
+  "id" | "created_at"
+>;

@@ -3,6 +3,7 @@ import { getStatusColor, getStatusIcon } from "@/lib/constants";
 import Link from "next/link";
 import { Calendar, FolderOpen, Trash2, Flag } from "lucide-react";
 import Button from "./Button";
+import RagStatusDot from "./RagStatusDot";
 
 interface ProjectCardProps {
   project: Project & {
@@ -26,9 +27,12 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
             <FolderOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-              {project.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                {project.name}
+              </h3>
+              <RagStatusDot status={project.rag_status} size="md" />
+            </div>
           </div>
         </Link>
         <span

@@ -117,3 +117,69 @@ export function getStatusLabel(status: Project["status"]): string {
 export function getStatusConfig(status: Project["status"]) {
   return PROJECT_STATUSES.find((s) => s.value === status);
 }
+
+/**
+ * RAG Status configuration
+ * Centralized source of truth for all RAG statuses across the application
+ */
+export const RAG_STATUSES = [
+  {
+    value: "Red" as const,
+    label: "Red",
+    color: {
+      dot: "bg-red-500",
+      badge:
+        "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800",
+      timeline: "bg-red-500 ring-red-200 dark:ring-red-800",
+    },
+  },
+  {
+    value: "Amber" as const,
+    label: "Amber",
+    color: {
+      dot: "bg-amber-500",
+      badge:
+        "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800",
+      timeline: "bg-amber-500 ring-amber-200 dark:ring-amber-800",
+    },
+  },
+  {
+    value: "Green" as const,
+    label: "Green",
+    color: {
+      dot: "bg-green-500",
+      badge:
+        "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800",
+      timeline: "bg-green-500 ring-green-200 dark:ring-green-800",
+    },
+  },
+  {
+    value: "N/A" as const,
+    label: "N/A",
+    color: {
+      dot: "bg-slate-400",
+      badge:
+        "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-900/20 dark:text-slate-300 dark:border-slate-700",
+      timeline: "bg-slate-400 ring-slate-200 dark:ring-slate-700",
+    },
+  },
+] as const;
+
+/**
+ * Get the color classes for a RAG status
+ */
+export function getRagColor(
+  status: string,
+  variant: "dot" | "badge" | "timeline" = "dot",
+): string {
+  const config = RAG_STATUSES.find((s) => s.value === status);
+  return config?.color[variant] || "";
+}
+
+/**
+ * Get the label for a RAG status
+ */
+export function getRagLabel(status: string): string {
+  const config = RAG_STATUSES.find((s) => s.value === status);
+  return config?.label || status;
+}

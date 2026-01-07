@@ -28,6 +28,7 @@ async function initializeSchema(database: Database) {
       end_date DATE,
       description TEXT,
       archived BOOLEAN DEFAULT FALSE,
+      rag_status VARCHAR NOT NULL DEFAULT 'N/A',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
@@ -69,6 +70,22 @@ async function initializeSchema(database: Database) {
       progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES projects(id)
+    )
+  `);
+
+  // Create project_status_updates table with sequence
+  await database.run(`
+    CREATE SEQUENCE IF NOT EXISTS project_status_updates_id_seq START 1
+  `);
+
+  await database.run(`
+    CREATE TABLE IF NOT EXISTS project_status_updates (
+      id INTEGER PRIMARY KEY DEFAULT nextval('project_status_updates_id_seq'),
+      project_id INTEGER NOT NULL,
+      rag_status VARCHAR NOT NULL CHECK (rag_status IN ('Red', 'Amber', 'Green', 'N/A')),
+      comment TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (project_id) REFERENCES projects(id)
     )
   `);
