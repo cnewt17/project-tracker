@@ -65,9 +65,10 @@ async function fetchActiveProjects(db: any) {
       id,
       name,
       end_date,
-      rag_status
+      rag_status,
+      status
     FROM projects
-    WHERE status = 'Active'
+    WHERE status IN ('Active', 'Blocked')
       AND archived = FALSE
     ORDER BY
       CASE WHEN end_date IS NULL THEN 1 ELSE 0 END,
