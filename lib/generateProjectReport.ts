@@ -434,6 +434,18 @@ function generateCSS(): string {
       border-color: #d8b4fe;
     }
 
+    .status-badge.active {
+      background: #f0fdf4;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .status-badge.blocked {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
     @media (prefers-color-scheme: dark) {
       .status-badge.ready {
         background: rgba(30, 58, 138, 0.2);
@@ -451,6 +463,18 @@ function generateCSS(): string {
         background: rgba(88, 28, 135, 0.2);
         color: #d8b4fe;
         border-color: #7e22ce;
+      }
+
+      .status-badge.active {
+        background: rgba(20, 83, 45, 0.2);
+        color: #86efac;
+        border-color: #166534;
+      }
+
+      .status-badge.blocked {
+        background: rgba(127, 29, 29, 0.2);
+        color: #fca5a5;
+        border-color: #991b1b;
       }
     }
 
@@ -554,6 +578,7 @@ function generateActiveProjectsSection(projects: any[]): string {
       (project) => `
     <tr>
       <td class="project-name">${escapeHtml(truncate(project.name, 80))}</td>
+      <td>${generateStatusBadge(project.status)}</td>
       <td>${formatDate(project.endDate)}</td>
       <td>${generateRagBadge(project.ragStatus)}</td>
       <td class="comment">${escapeHtml(truncate(project.latestComment || "No updates", 150))}</td>
@@ -654,6 +679,8 @@ function generateStatusBadge(status: string): string {
       label: "Awaiting Confirmation",
     },
     "Sales Pipeline": { class: "sales-pipeline", label: "Sales Pipeline" },
+    Active: { class: "active", label: "Active" },
+    Blocked: { class: "blocked", label: "Blocked" },
   };
 
   const config = statusMap[status] || { class: "ready", label: status };

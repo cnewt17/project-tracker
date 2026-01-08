@@ -91,6 +91,7 @@ async function enrichWithComments(db: any, projects: any[]) {
       return {
         id: project.id,
         name: project.name,
+        status: project.status,
         endDate: project.end_date,
         ragStatus: project.rag_status,
         latestComment: comments[0]?.comment || null,
