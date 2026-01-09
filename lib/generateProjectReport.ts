@@ -598,6 +598,7 @@ function generateActiveProjectsSection(projects: any[]): string {
           <thead>
             <tr>
               <th>Project Name</th>
+              <th>Project Status</th>
               <th>End Date</th>
               <th>RAG Status</th>
               <th>Latest Update</th>
