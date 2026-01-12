@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Project, Resource, Milestone, ProjectStatusUpdate } from "@/lib/types";
+import { formatDateUK } from "@/lib/dateUtils";
 import ResourceTable from "@/components/ResourceTable";
 import MilestoneCard from "@/components/MilestoneCard";
 import MilestoneForm from "@/components/MilestoneForm";
@@ -553,7 +554,7 @@ export default function ProjectDetailPage({
                     Start Date
                   </p>
                   <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-                    {new Date(project.start_date).toLocaleDateString()}
+                    {formatDateUK(project.start_date)}
                   </p>
                 </div>
               </div>
@@ -567,7 +568,7 @@ export default function ProjectDetailPage({
                       End Date
                     </p>
                     <p className="text-lg font-semibold text-slate-900 dark:text-slate-50">
-                      {new Date(project.end_date).toLocaleDateString()}
+                      {formatDateUK(project.end_date)}
                     </p>
                   </div>
                 </div>

@@ -370,6 +370,7 @@
 
 - [ ] Calendar buttons don't change colour when viewed in Dark Mode
 - [x] The Projects page isn't using the updated project statuses  
+- [ ] When editing a project if the start date exists it should be pre-filled with the existing value
 
 ---
 

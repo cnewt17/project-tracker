@@ -22,10 +22,10 @@ export async function GET() {
     const data: ProjectReportData = {
       metadata: {
         generatedAt: new Date().toISOString(),
-        reportDate: new Date().toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
+        reportDate: new Date().toLocaleDateString("en-GB", {
           day: "numeric",
+          month: "long",
+          year: "numeric",
         }),
       },
       kpis,

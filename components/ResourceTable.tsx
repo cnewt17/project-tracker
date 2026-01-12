@@ -1,6 +1,7 @@
 "use client";
 
 import { Resource } from "@/lib/types";
+import { formatDateUK } from "@/lib/dateUtils";
 import Button from "./Button";
 import { useState, useEffect } from "react";
 import { Edit, Save, X, AlertCircle } from "lucide-react";
@@ -203,7 +204,7 @@ export default function ResourceTable({
                       className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900"
                     />
                   ) : (
-                    new Date(resource.start_date).toLocaleDateString()
+                    formatDateUK(resource.start_date)
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
@@ -217,7 +218,7 @@ export default function ResourceTable({
                       className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded focus:ring-2 focus:ring-blue-500 bg-white dark:bg-slate-900"
                     />
                   ) : resource.end_date ? (
-                    new Date(resource.end_date).toLocaleDateString()
+                    formatDateUK(resource.end_date)
                   ) : (
                     "-"
                   )}

@@ -336,7 +336,7 @@ export default function ProjectsPage() {
               </Button>
             ) : (
               <Link href="/projects/new">
-                <Button variant="primary" size="md">
+                <Button variant="primary" size="sm">
                   <Plus className="w-5 h-5" />
                   Create Project
                 </Button>

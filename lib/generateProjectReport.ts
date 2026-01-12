@@ -598,6 +598,7 @@ function generateActiveProjectsSection(projects: any[]): string {
           <thead>
             <tr>
               <th>Project Name</th>
+              <th>Project Status</th>
               <th>End Date</th>
               <th>RAG Status</th>
               <th>Latest Update</th>
@@ -696,9 +697,9 @@ function formatDate(dateString: string | null): string {
   if (!dateString) return "No end date";
 
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
+  return date.toLocaleDateString("en-GB", {
     day: "numeric",
+    month: "short",
     year: "numeric",
   });
 }

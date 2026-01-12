@@ -1,5 +1,6 @@
 import { Project } from "@/lib/types";
 import { getStatusColor, getStatusIcon } from "@/lib/constants";
+import { formatDateUK } from "@/lib/dateUtils";
 import Link from "next/link";
 import { Calendar, FolderOpen, Trash2, Flag } from "lucide-react";
 import Button from "./Button";
@@ -53,12 +54,12 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
         <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4 pt-4 border-t border-slate-100 dark:border-slate-700">
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            <span>{new Date(project.start_date).toLocaleDateString()}</span>
+            <span>{formatDateUK(project.start_date)}</span>
           </div>
           {project.end_date && (
             <>
               <span>→</span>
-              <span>{new Date(project.end_date).toLocaleDateString()}</span>
+              <span>{formatDateUK(project.end_date)}</span>
             </>
           )}
         </div>
