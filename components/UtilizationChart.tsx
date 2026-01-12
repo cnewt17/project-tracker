@@ -146,7 +146,7 @@ export default function UtilizationChart() {
                 Average Utilization
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                {data.summary.averageUtilization.toFixed(2)}%
+                {Math.round(data.summary.averageUtilization)}%
               </p>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
@@ -155,7 +155,7 @@ export default function UtilizationChart() {
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {data.summary.currentWeekUtilization !== null
-                  ? `${data.summary.currentWeekUtilization.toFixed(2)}%`
+                  ? `${Math.round(data.summary.currentWeekUtilization)}%`
                   : "N/A"}
               </p>
             </div>
