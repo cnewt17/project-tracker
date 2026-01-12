@@ -25,10 +25,13 @@ export async function GET() {
     );
     const totalResources = Number(totalResourcesResult[0].count);
 
-    // Get over-allocated resources (resources with >100% total allocation)
+    // Get over-allocated resources (resources with >100% current allocation as of today)
+    const today = new Date().toISOString().split("T")[0];
     const overAllocatedQuery = `
-      SELECT name, SUM(allocation_percentage) as total_allocation
+      SELECT name, SUM(allocation_percentage) as current_allocation
       FROM resources
+      WHERE start_date <= '${today}'
+        AND (end_date >= '${today}' OR end_date IS NULL)
       GROUP BY name
       HAVING SUM(allocation_percentage) > 100
     `;
