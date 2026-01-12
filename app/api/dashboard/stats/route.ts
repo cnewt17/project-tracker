@@ -19,9 +19,9 @@ export async function GET() {
     );
     const activeProjects = Number(activeProjectsResult[0].count);
 
-    // Get total resources
+    // Get total resources (count unique people by name)
     const totalResourcesResult = await db.all(
-      "SELECT COUNT(*) as count FROM resources",
+      "SELECT COUNT(DISTINCT name) as count FROM resources",
     );
     const totalResources = Number(totalResourcesResult[0].count);
 
