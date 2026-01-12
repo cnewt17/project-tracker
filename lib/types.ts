@@ -111,6 +111,14 @@ export interface ProjectReportData {
     name: string;
     status: string;
   }>;
+  resources: Array<{
+    name: string;
+    projects: Array<{
+      projectName: string;
+      allocation: number;
+      endDate: string | null;
+    }>;
+  }>;
 }
 
 export interface ResourceAllocation {
