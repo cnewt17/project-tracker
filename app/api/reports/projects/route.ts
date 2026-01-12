@@ -18,6 +18,9 @@ export async function GET() {
     // Fetch pending projects
     const pendingProjects = await fetchPendingProjects(db);
 
+    // Fetch resource allocations
+    const resources = await fetchResourceAllocations(db);
+
     // Build response
     const data: ProjectReportData = {
       metadata: {
@@ -31,6 +34,7 @@ export async function GET() {
       kpis,
       activeProjects: projectsWithComments,
       pendingProjects,
+      resources,
     };
 
     return NextResponse.json(data);
@@ -121,4 +125,43 @@ async function fetchPendingProjects(db: any) {
     const orderB = statusOrder[b.status] || 999;
     return orderA - orderB;
   });
+}
+
+async function fetchResourceAllocations(db: any) {
+  const today = new Date().toISOString().split("T")[0];
+
+  const resources = await db.all(`
+    SELECT
+      r.name,
+      r.allocation_percentage,
+      r.end_date,
+      p.id as project_id,
+      p.name as project_name
+    FROM resources r
+    JOIN projects p ON r.project_id = p.id
+    WHERE r.start_date <= '${today}'
+      AND (r.end_date >= '${today}' OR r.end_date IS NULL)
+      AND p.archived = FALSE
+    ORDER BY r.name, p.name
+  `);
+
+  // Group resources by name
+  const groupedResources: { [key: string]: any } = {};
+
+  resources.forEach((resource: any) => {
+    if (!groupedResources[resource.name]) {
+      groupedResources[resource.name] = {
+        name: resource.name,
+        projects: [],
+      };
+    }
+
+    groupedResources[resource.name].projects.push({
+      projectName: resource.project_name,
+      allocation: Number(resource.allocation_percentage),
+      endDate: resource.end_date,
+    });
+  });
+
+  return Object.values(groupedResources);
 }

@@ -17,6 +17,7 @@ export function generateProjectReportHTML(data: ProjectReportData): string {
     ${generateHeader(data.metadata)}
     ${generateKPIs(data.kpis)}
     ${generateActiveProjectsSection(data.activeProjects)}
+    ${generateResourcesSection(data.resources)}
     ${generatePendingProjectsSection(data.pendingProjects)}
   </div>
 </body>
@@ -501,6 +502,62 @@ function generateCSS(): string {
       }
     }
 
+    /* Resources Section */
+    .project-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .project-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .project-list li:last-child {
+      border-bottom: none;
+    }
+
+    .project-list .project-name {
+      flex: 1;
+      font-weight: 500;
+      color: var(--foreground);
+    }
+
+    .allocation-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .allocation-badge {
+        background: rgba(30, 58, 138, 0.2);
+        color: #93c5fd;
+        border-color: #1e40af;
+      }
+    }
+
+    .end-date {
+      font-size: 0.875rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .resource-name {
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
     /* Print styles */
     @media print {
       body {
@@ -649,6 +706,69 @@ function generatePendingProjectsSection(projects: any[]): string {
         <ul>
           ${items}
         </ul>
+      </div>
+    </section>
+  `;
+}
+
+function generateResourcesSection(resources: any[]): string {
+  if (resources.length === 0) {
+    return `
+      <section class="section">
+        <div class="section-header">
+          <span class="section-icon">👥</span>
+          <h2 class="section-title">Current Project Assignments</h2>
+        </div>
+        <div class="empty-state">
+          <p>No active resource allocations</p>
+        </div>
+      </section>
+    `;
+  }
+
+  const rows = resources
+    .map(
+      (resource) => `
+    <tr>
+      <td class="resource-name">${escapeHtml(resource.name)}</td>
+      <td>
+        <ul class="project-list">
+          ${resource.projects
+            .map(
+              (project: any) => `
+            <li>
+              <span class="project-name">${escapeHtml(project.projectName)}</span>
+              <span class="allocation-badge">${project.allocation}%</span>
+              <span class="end-date">${formatDate(project.endDate)}</span>
+            </li>
+          `,
+            )
+            .join("")}
+        </ul>
+      </td>
+    </tr>
+  `,
+    )
+    .join("");
+
+  return `
+    <section class="section">
+      <div class="section-header">
+        <span class="section-icon">👥</span>
+        <h2 class="section-title">Current Resource Allocations</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Resource Name</th>
+              <th>Active Projects</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
       </div>
     </section>
   `;
