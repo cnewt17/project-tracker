@@ -140,3 +140,34 @@ export interface ResourceAllocation {
   earliest_start: string | null;
   latest_end: string | null;
 }
+
+export interface UtilizationSnapshot {
+  id: number;
+  week_start_date: string;
+  week_end_date: string;
+  total_capacity: number;
+  total_allocated: number;
+  utilization_percentage: number;
+  unique_resource_count: number;
+  snapshot_date: string;
+  created_at: string;
+}
+
+export interface UtilizationChartData {
+  week: string; // UK date format
+  weekLabel: string; // "Week 1", "Week 2"
+  utilization: number; // Percentage
+  capacity: number;
+  allocated: number;
+  resourceCount: number;
+  weekStartDate: string; // ISO date
+}
+
+export interface UtilizationAPIResponse {
+  data: UtilizationChartData[];
+  summary: {
+    averageUtilization: number;
+    currentWeekUtilization: number | null;
+    weeksTracked: number;
+  };
+}

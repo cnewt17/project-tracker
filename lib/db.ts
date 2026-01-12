@@ -90,6 +90,30 @@ async function initializeSchema(database: Database) {
     )
   `);
 
+  // Create team_utilization_snapshots table with sequence
+  await database.run(`
+    CREATE SEQUENCE IF NOT EXISTS team_utilization_snapshots_id_seq START 1
+  `);
+
+  await database.run(`
+    CREATE TABLE IF NOT EXISTS team_utilization_snapshots (
+      id INTEGER PRIMARY KEY DEFAULT nextval('team_utilization_snapshots_id_seq'),
+      week_start_date DATE NOT NULL UNIQUE,
+      week_end_date DATE NOT NULL,
+      total_capacity DECIMAL(10,2) NOT NULL,
+      total_allocated DECIMAL(10,2) NOT NULL,
+      utilization_percentage DECIMAL(5,2) NOT NULL,
+      unique_resource_count INTEGER NOT NULL,
+      snapshot_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await database.run(`
+    CREATE INDEX IF NOT EXISTS idx_utilization_week_start
+    ON team_utilization_snapshots(week_start_date)
+  `);
+
   console.log("Database schema initialized");
 }
 

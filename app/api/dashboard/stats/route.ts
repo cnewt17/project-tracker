@@ -19,16 +19,19 @@ export async function GET() {
     );
     const activeProjects = Number(activeProjectsResult[0].count);
 
-    // Get total resources
+    // Get total resources (count unique people by name)
     const totalResourcesResult = await db.all(
-      "SELECT COUNT(*) as count FROM resources",
+      "SELECT COUNT(DISTINCT name) as count FROM resources",
     );
     const totalResources = Number(totalResourcesResult[0].count);
 
-    // Get over-allocated resources (resources with >100% total allocation)
+    // Get over-allocated resources (resources with >100% current allocation as of today)
+    const today = new Date().toISOString().split("T")[0];
     const overAllocatedQuery = `
-      SELECT name, SUM(allocation_percentage) as total_allocation
+      SELECT name, SUM(allocation_percentage) as current_allocation
       FROM resources
+      WHERE start_date <= '${today}'
+        AND (end_date >= '${today}' OR end_date IS NULL)
       GROUP BY name
       HAVING SUM(allocation_percentage) > 100
     `;

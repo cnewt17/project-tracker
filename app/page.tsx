@@ -23,6 +23,7 @@ import PageTransition from "@/components/PageTransition";
 import StaggeredFadeIn from "@/components/StaggeredFadeIn";
 import { generateProjectReportHTML } from "@/lib/generateProjectReport";
 import { useToast } from "@/lib/useToast";
+import UtilizationChart from "@/components/UtilizationChart";
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -276,6 +277,9 @@ export default function Dashboard() {
                 }
               />
             </StaggeredFadeIn>
+
+            {/* Team Utilization Chart */}
+            <UtilizationChart />
 
             {/* Projects by Status */}
             <div className="bg-white dark:bg-slate-800 shadow-md rounded-xl p-8 border border-slate-200 dark:border-slate-700">

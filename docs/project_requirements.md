@@ -77,6 +77,8 @@ A Next.js application for tracking projects and their resource allocation, desig
   - End date (optional)
   - Created/updated timestamps
 - Resource allocation should take into account the time spent on each project
+- The dashboard should dispaly a graph for the total utilisation of the team over time
+- THe utilisaiton graph should by default be at a team level but should be able to be switched to show individual resrouces
 
 **User Stories:**
 - As a user, I can add resources to a project
@@ -85,6 +87,7 @@ A Next.js application for tracking projects and their resource allocation, desig
 - As a user, I can remove resources from a project
 - As a user, I can see total resource allocation across all projects
 - As a user, I can view resource allocation history
+- As a user, I can view the total utilisation of my team
 
 
 ### 3. Dashboard/Overview
