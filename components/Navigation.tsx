@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { LayoutGrid } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
@@ -28,6 +28,12 @@ export default function Navigation() {
               className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
             >
               Projects
+            </a>
+            <a
+              href="/resources"
+              className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            >
+              Resources
             </a>
             <ThemeToggle />
           </div>

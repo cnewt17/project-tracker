@@ -112,3 +112,23 @@ export interface ProjectReportData {
     status: string;
   }>;
 }
+
+export interface ResourceAllocation {
+  name: string;
+  types: string;
+  current_allocation: number;
+  project_count: number;
+  active_project_count: number;
+  is_over_allocated: boolean;
+  projects: Array<{
+    project_id: number;
+    project_name: string;
+    allocation: number;
+    start_date: string;
+    end_date: string | null;
+    project_status: string;
+    is_active: boolean;
+  }>;
+  earliest_start: string | null;
+  latest_end: string | null;
+}

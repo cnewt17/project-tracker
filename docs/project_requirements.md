@@ -76,6 +76,7 @@ A Next.js application for tracking projects and their resource allocation, desig
   - Start date
   - End date (optional)
   - Created/updated timestamps
+- Resource allocation should take into account the time spent on each project
 
 **User Stories:**
 - As a user, I can add resources to a project
@@ -83,6 +84,8 @@ A Next.js application for tracking projects and their resource allocation, desig
 - As a user, I can update resource allocation
 - As a user, I can remove resources from a project
 - As a user, I can see total resource allocation across all projects
+- As a user, I can view resource allocation history
+
 
 ### 3. Dashboard/Overview
 **Requirements:**
