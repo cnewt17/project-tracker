@@ -31,13 +31,16 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
         </p>
         <div className="space-y-1 text-sm">
           <p className="text-gray-700 dark:text-gray-300">
-            <span className="font-medium">Utilization:</span> {data.utilization.toFixed(2)}%
+            <span className="font-medium">Utilization:</span>{" "}
+            {data.utilization.toFixed(2)}%
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            <span className="font-medium">Capacity:</span> {data.capacity.toFixed(0)}%
+            <span className="font-medium">Capacity:</span>{" "}
+            {data.capacity.toFixed(0)}%
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            <span className="font-medium">Allocated:</span> {data.allocated.toFixed(0)}%
+            <span className="font-medium">Allocated:</span>{" "}
+            {data.allocated.toFixed(0)}%
           </p>
           <p className="text-gray-700 dark:text-gray-300">
             <span className="font-medium">Resources:</span> {data.resourceCount}
@@ -100,7 +103,9 @@ export default function UtilizationChart() {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <div className="flex items-center justify-center h-96">
-          <div className="text-gray-500 dark:text-gray-400">Loading utilization data...</div>
+          <div className="text-gray-500 dark:text-gray-400">
+            Loading utilization data...
+          </div>
         </div>
       </div>
     );
@@ -122,7 +127,7 @@ export default function UtilizationChart() {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Team Utilization
+          Team Utilisation
         </h2>
         <button
           onClick={captureSnapshot}
@@ -170,7 +175,10 @@ export default function UtilizationChart() {
                 data={data.data}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-300 dark:stroke-gray-600" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-gray-300 dark:stroke-gray-600"
+                />
                 <XAxis
                   dataKey="weekLabel"
                   className="text-gray-600 dark:text-gray-400"
@@ -181,7 +189,7 @@ export default function UtilizationChart() {
                     value: "Utilization %",
                     angle: -90,
                     position: "insideLeft",
-                    className: "text-gray-600 dark:text-gray-400"
+                    className: "text-gray-600 dark:text-gray-400",
                   }}
                   className="text-gray-600 dark:text-gray-400"
                   tick={{ fill: "currentColor" }}
