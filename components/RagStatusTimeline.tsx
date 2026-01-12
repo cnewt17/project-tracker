@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ProjectStatusUpdate } from "@/lib/types";
+import { formatDateUK, formatDateTimeUK } from "@/lib/dateUtils";
 import { getRagColor, getRagLabel } from "@/lib/constants";
 import RagStatusDot from "./RagStatusDot";
 
@@ -9,12 +10,11 @@ interface RagStatusTimelineProps {
   updates: ProjectStatusUpdate[];
 }
 
-export default function RagStatusTimeline({
-  updates,
-}: RagStatusTimelineProps) {
-  const [selectedUpdate, setSelectedUpdate] = useState<ProjectStatusUpdate | null>(
-    updates.length > 0 ? updates[0] : null,
-  );
+export default function RagStatusTimeline({ updates }: RagStatusTimelineProps) {
+  const [selectedUpdate, setSelectedUpdate] =
+    useState<ProjectStatusUpdate | null>(
+      updates.length > 0 ? updates[0] : null,
+    );
 
   if (updates.length === 0) {
     return (
@@ -54,7 +54,7 @@ export default function RagStatusTimeline({
               key={update.id}
               className="text-xs text-slate-500 dark:text-slate-400 text-center"
             >
-              {new Date(update.created_at).toLocaleDateString()}
+              {formatDateUK(update.created_at)}
             </div>
           ))}
         </div>
@@ -69,7 +69,7 @@ export default function RagStatusTimeline({
               {getRagLabel(selectedUpdate.rag_status)}
             </span>
             <span className="text-sm text-slate-500 dark:text-slate-400">
-              {new Date(selectedUpdate.created_at).toLocaleString()}
+              {formatDateTimeUK(selectedUpdate.created_at)}
             </span>
           </div>
           {selectedUpdate.comment && (

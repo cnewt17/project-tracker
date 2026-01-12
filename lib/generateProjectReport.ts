@@ -697,9 +697,9 @@ function formatDate(dateString: string | null): string {
   if (!dateString) return "No end date";
 
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
+  return date.toLocaleDateString("en-GB", {
     day: "numeric",
+    month: "short",
     year: "numeric",
   });
 }

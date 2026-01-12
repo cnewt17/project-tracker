@@ -1,7 +1,15 @@
 "use client";
 
 import { Milestone } from "@/lib/types";
-import { Calendar, CheckCircle2, Clock, Flag, Trash2, Edit } from "lucide-react";
+import { formatDateLongUK } from "@/lib/dateUtils";
+import {
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Flag,
+  Trash2,
+  Edit,
+} from "lucide-react";
 import Button from "./Button";
 
 interface MilestoneCardProps {
@@ -20,7 +28,8 @@ export default function MilestoneCard({
   const statusConfig = {
     pending: {
       label: "Pending",
-      color: "bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300",
+      color:
+        "bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300",
       icon: Clock,
     },
     in_progress: {
@@ -30,7 +39,8 @@ export default function MilestoneCard({
     },
     completed: {
       label: "Completed",
-      color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+      color:
+        "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
       icon: CheckCircle2,
     },
   };
@@ -42,15 +52,6 @@ export default function MilestoneCard({
   const isOverdue =
     milestone.status !== "completed" &&
     new Date(milestone.due_date) < new Date();
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
 
   return (
     <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -74,7 +75,7 @@ export default function MilestoneCard({
           )}
           <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
             <Calendar className="w-4 h-4" />
-            <span>Due: {formatDate(milestone.due_date)}</span>
+            <span>Due: {formatDateLongUK(milestone.due_date)}</span>
             {isOverdue && (
               <span className="text-red-600 dark:text-red-400 font-medium">
                 (Overdue)
@@ -120,9 +121,7 @@ export default function MilestoneCard({
         <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
           <div
             className={`h-full transition-all duration-300 rounded-full ${
-              milestone.progress === 100
-                ? "bg-green-500"
-                : "bg-blue-500"
+              milestone.progress === 100 ? "bg-green-500" : "bg-blue-500"
             }`}
             style={{ width: `${milestone.progress}%` }}
           />
@@ -134,7 +133,9 @@ export default function MilestoneCard({
               min="0"
               max="100"
               value={milestone.progress}
-              onChange={(e) => onUpdateProgress(milestone.id, parseInt(e.target.value))}
+              onChange={(e) =>
+                onUpdateProgress(milestone.id, parseInt(e.target.value))
+              }
               className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
             />
           </div>
