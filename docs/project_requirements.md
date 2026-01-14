@@ -145,6 +145,15 @@ CREATE TABLE resources (
 );
 ```
 
+## 5. Jira Integration
+**Requirements:**
+- Link projects and milestones with Jira Projects and Jira tasks using the Jira key
+
+
+**User Stories**
+- As a user, I can add a Jira Project key to a project
+- As a user, I can add a Jira Task Key to a milestone
+
 ## API Endpoints
 
 ### Projects

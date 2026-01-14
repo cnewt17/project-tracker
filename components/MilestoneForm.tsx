@@ -22,8 +22,10 @@ export default function MilestoneForm({
     name: milestone?.name || "",
     description: milestone?.description || "",
     due_date: milestone?.due_date || "",
+    baseline_due_date: milestone?.baseline_due_date || "",
     status: milestone?.status || "pending",
     progress: milestone?.progress || 0,
+    jira_key: milestone?.jira_key || "",
   });
 
   useEffect(() => {
@@ -32,8 +34,10 @@ export default function MilestoneForm({
         name: milestone.name,
         description: milestone.description || "",
         due_date: milestone.due_date,
+        baseline_due_date: milestone.baseline_due_date || "",
         status: milestone.status,
         progress: milestone.progress,
+        jira_key: milestone.jira_key || "",
       });
     }
   }, [milestone]);
@@ -49,7 +53,7 @@ export default function MilestoneForm({
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -114,6 +118,35 @@ export default function MilestoneForm({
           />
         </div>
 
+        <div>
+          <label
+            htmlFor="jira_key"
+            className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+          >
+            Jira Task Key (Optional)
+          </label>
+          <input
+            type="text"
+            id="jira_key"
+            name="jira_key"
+            value={formData.jira_key}
+            onChange={(e) => {
+              const { value } = e.target;
+              setFormData((prev) => ({
+                ...prev,
+                jira_key: value.toUpperCase(),
+              }));
+            }}
+            pattern="[A-Z][A-Z0-9]+-[0-9]+"
+            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-mono"
+            placeholder="e.g., PROJ-123"
+            title="Format: PROJ-123"
+          />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Format: PROJECT-123
+          </p>
+        </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label
@@ -133,6 +166,25 @@ export default function MilestoneForm({
             />
           </div>
 
+          <div>
+            <label
+              htmlFor="baseline_due_date"
+              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+            >
+              Baseline Due Date (Optional)
+            </label>
+            <input
+              type="date"
+              id="baseline_due_date"
+              name="baseline_due_date"
+              value={formData.baseline_due_date}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label
               htmlFor="status"

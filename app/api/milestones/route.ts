@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { CreateMilestoneInput } from "@/lib/types";
+import { validateJiraKey } from "@/lib/config";
 
 // GET /api/milestones - Get all milestones or filter by project_id
 export async function GET(request: NextRequest) {
@@ -13,11 +14,11 @@ export async function GET(request: NextRequest) {
     if (projectId) {
       milestones = await db.all(
         "SELECT * FROM milestones WHERE project_id = ? ORDER BY due_date ASC",
-        projectId
+        projectId,
       );
     } else {
       milestones = await db.all(
-        "SELECT * FROM milestones ORDER BY due_date ASC"
+        "SELECT * FROM milestones ORDER BY due_date ASC",
       );
     }
 
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching milestones:", error);
     return NextResponse.json(
       { error: "Failed to fetch milestones" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     if (!body.project_id || !body.name || !body.due_date) {
       return NextResponse.json(
         { error: "Missing required fields: project_id, name, due_date" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,47 +51,56 @@ export async function POST(request: NextRequest) {
     if (body.status && !validStatuses.includes(body.status)) {
       return NextResponse.json(
         {
-          error:
-            "Invalid status. Must be one of: " + validStatuses.join(", "),
+          error: "Invalid status. Must be one of: " + validStatuses.join(", "),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Validate progress
-    if (body.progress !== undefined && (body.progress < 0 || body.progress > 100)) {
+    if (
+      body.progress !== undefined &&
+      (body.progress < 0 || body.progress > 100)
+    ) {
       return NextResponse.json(
         { error: "Progress must be between 0 and 100" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Check if project exists
     const projectResult = await db.all(
       "SELECT * FROM projects WHERE id = ?",
-      body.project_id
+      body.project_id,
     );
     if (projectResult.length === 0) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    // Validate Jira key format if provided
+    if (body.jira_key && !validateJiraKey(body.jira_key)) {
       return NextResponse.json(
-        { error: "Project not found" },
-        { status: 404 }
+        { error: "Invalid Jira key format. Expected format: PROJ-123" },
+        { status: 400 },
       );
     }
 
     await db.run(
-      `INSERT INTO milestones (project_id, name, description, due_date, status, progress)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO milestones (project_id, name, description, due_date, baseline_due_date, status, progress, jira_key)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       body.project_id,
       body.name,
       body.description || null,
       body.due_date,
+      body.baseline_due_date || null,
       body.status || "pending",
-      body.progress || 0
+      body.progress || 0,
+      body.jira_key || null,
     );
 
     const milestones = await db.all(
       "SELECT * FROM milestones WHERE project_id = ? ORDER BY id DESC LIMIT 1",
-      body.project_id
+      body.project_id,
     );
 
     return NextResponse.json(milestones[0], { status: 201 });
@@ -98,7 +108,7 @@ export async function POST(request: NextRequest) {
     console.error("Error creating milestone:", error);
     return NextResponse.json(
       { error: "Failed to create milestone" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

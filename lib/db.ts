@@ -66,8 +66,10 @@ async function initializeSchema(database: Database) {
       name VARCHAR NOT NULL,
       description TEXT,
       due_date DATE NOT NULL,
+      baseline_due_date DATE,
       status VARCHAR NOT NULL DEFAULT 'pending',
       progress INTEGER DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+      jira_key VARCHAR,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (project_id) REFERENCES projects(id)

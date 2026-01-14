@@ -64,8 +64,10 @@ export interface Milestone {
   name: string;
   description: string | null;
   due_date: string;
+  baseline_due_date: string | null;
   status: "pending" | "in_progress" | "completed";
   progress: number;
+  jira_key: string | null;
   created_at: string;
   updated_at: string;
 }

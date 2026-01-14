@@ -11,6 +11,7 @@ import {
   Edit,
 } from "lucide-react";
 import Button from "./Button";
+import JiraLink from "./JiraLink";
 
 interface MilestoneCardProps {
   milestone: Milestone;
@@ -68,6 +69,11 @@ export default function MilestoneCard({
               {config.label}
             </span>
           </div>
+          {milestone.jira_key && (
+            <div className="mb-2">
+              <JiraLink jiraKey={milestone.jira_key} />
+            </div>
+          )}
           {milestone.description && (
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
               {milestone.description}
@@ -82,6 +88,14 @@ export default function MilestoneCard({
               </span>
             )}
           </div>
+          {milestone.baseline_due_date && (
+            <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <Calendar className="w-4 h-4" />
+              <span>
+                Baseline: {formatDateLongUK(milestone.baseline_due_date)}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
           {onEdit && (

@@ -9,6 +9,7 @@ A Next.js application for tracking projects and their resource allocation, built
 - **Dashboard**: View key metrics including total projects, active projects, and over-allocated resources
 - **Real-time Updates**: Track resource allocation across multiple projects
 - **Local Database**: Uses DuckDB for embedded, file-based data persistence
+- **Jira Integration**: Optional integration to link projects and milestones with Jira
 
 ## Tech Stack
 
@@ -157,6 +158,37 @@ All data is stored in a local DuckDB file at `./data/projects.duckdb`. This file
 - Persisted between application restarts
 - Excluded from git (in `.gitignore`)
 - Can be backed up manually
+
+## Jira Integration
+
+This application supports optional Jira integration for milestones.
+
+### Configuration
+
+To enable clickable Jira links, set the environment variable:
+
+```bash
+NEXT_PUBLIC_JIRA_BASE_URL=https://your-company.atlassian.net
+```
+
+Create a `.env.local` file in the project root with the above variable.
+
+### Usage
+
+- **Milestones**: Add a Jira Task Key (e.g., PROJ-456) when creating or editing a milestone
+- Keys must follow the format: `PROJECT-123` (uppercase letters/numbers, dash, numbers)
+- If configured, keys will appear as clickable links opening Jira in a new tab
+- If not configured, keys will display as plain text
+
+### Database Migration
+
+For existing databases, run:
+
+```sql
+ALTER TABLE milestones ADD COLUMN jira_key VARCHAR;
+```
+
+Alternatively, delete `data/projects.duckdb` to recreate with the new schema (this will lose all existing data).
 
 ## Development Notes
 

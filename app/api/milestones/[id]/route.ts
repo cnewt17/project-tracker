@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDatabase } from "@/lib/db";
 import { UpdateMilestoneInput } from "@/lib/types";
+import { validateJiraKey } from "@/lib/config";
 
 // GET /api/milestones/[id] - Get single milestone
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -13,14 +14,14 @@ export async function GET(
 
     const milestoneResult = await db.all(
       "SELECT * FROM milestones WHERE id = ?",
-      id
+      id,
     );
     const milestone = milestoneResult[0];
 
     if (!milestone) {
       return NextResponse.json(
         { error: "Milestone not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -29,7 +30,7 @@ export async function GET(
     console.error("Error fetching milestone:", error);
     return NextResponse.json(
       { error: "Failed to fetch milestone" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -37,7 +38,7 @@ export async function GET(
 // PUT /api/milestones/[id] - Update milestone
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -47,13 +48,13 @@ export async function PUT(
     // Check if milestone exists
     const existingResult = await db.all(
       "SELECT * FROM milestones WHERE id = ?",
-      id
+      id,
     );
     const existing = existingResult[0];
     if (!existing) {
       return NextResponse.json(
         { error: "Milestone not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -66,16 +67,32 @@ export async function PUT(
             error:
               "Invalid status. Must be one of: " + validStatuses.join(", "),
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
 
     // Validate progress if provided
-    if (body.progress !== undefined && (body.progress < 0 || body.progress > 100)) {
+    if (
+      body.progress !== undefined &&
+      (body.progress < 0 || body.progress > 100)
+    ) {
       return NextResponse.json(
         { error: "Progress must be between 0 and 100" },
-        { status: 400 }
+        { status: 400 },
+      );
+    }
+
+    // Validate Jira key format if provided
+    if (
+      body.jira_key !== undefined &&
+      body.jira_key !== null &&
+      body.jira_key !== "" &&
+      !validateJiraKey(body.jira_key)
+    ) {
+      return NextResponse.json(
+        { error: "Invalid Jira key format. Expected format: PROJ-123" },
+        { status: 400 },
       );
     }
 
@@ -95,6 +112,10 @@ export async function PUT(
       updates.push("due_date = ?");
       values.push(body.due_date);
     }
+    if (body.baseline_due_date !== undefined) {
+      updates.push("baseline_due_date = ?");
+      values.push(body.baseline_due_date || null);
+    }
     if (body.status !== undefined) {
       updates.push("status = ?");
       values.push(body.status);
@@ -103,6 +124,10 @@ export async function PUT(
       updates.push("progress = ?");
       values.push(body.progress);
     }
+    if (body.jira_key !== undefined) {
+      updates.push("jira_key = ?");
+      values.push(body.jira_key || null);
+    }
 
     updates.push("updated_at = CURRENT_TIMESTAMP");
     values.push(id);
@@ -110,25 +135,25 @@ export async function PUT(
     if (updates.length === 1) {
       return NextResponse.json(
         { error: "No fields to update" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     await db.run(
       `UPDATE milestones SET ${updates.join(", ")} WHERE id = ?`,
-      ...values
+      ...values,
     );
 
     const milestoneResult = await db.all(
       "SELECT * FROM milestones WHERE id = ?",
-      id
+      id,
     );
     return NextResponse.json(milestoneResult[0]);
   } catch (error) {
     console.error("Error updating milestone:", error);
     return NextResponse.json(
       { error: "Failed to update milestone" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -136,7 +161,7 @@ export async function PUT(
 // DELETE /api/milestones/[id] - Delete milestone
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -144,13 +169,13 @@ export async function DELETE(
 
     const existingResult = await db.all(
       "SELECT * FROM milestones WHERE id = ?",
-      id
+      id,
     );
     const existing = existingResult[0];
     if (!existing) {
       return NextResponse.json(
         { error: "Milestone not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -160,7 +185,7 @@ export async function DELETE(
     console.error("Error deleting milestone:", error);
     return NextResponse.json(
       { error: "Failed to delete milestone" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
