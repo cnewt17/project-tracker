@@ -874,7 +874,6 @@ export default function ProjectDetailPage({
                   milestone={milestone}
                   onDelete={handleDeleteMilestone}
                   onEdit={handleEditMilestone}
-                  onUpdateProgress={handleUpdateProgress}
                 />
               ))}
             </div>

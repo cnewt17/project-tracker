@@ -17,14 +17,12 @@ interface MilestoneCardProps {
   milestone: Milestone;
   onDelete?: (id: number) => void;
   onEdit?: (milestone: Milestone) => void;
-  onUpdateProgress?: (id: number, progress: number) => void;
 }
 
 export default function MilestoneCard({
   milestone,
   onDelete,
   onEdit,
-  onUpdateProgress,
 }: MilestoneCardProps) {
   const statusConfig = {
     pending: {
@@ -140,20 +138,6 @@ export default function MilestoneCard({
             style={{ width: `${milestone.progress}%` }}
           />
         </div>
-        {onUpdateProgress && milestone.status !== "completed" && (
-          <div className="mt-2">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={milestone.progress}
-              onChange={(e) =>
-                onUpdateProgress(milestone.id, parseInt(e.target.value))
-              }
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-            />
-          </div>
-        )}
       </div>
     </div>
   );
