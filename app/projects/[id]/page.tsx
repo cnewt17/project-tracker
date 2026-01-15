@@ -30,6 +30,7 @@ import {
   Copy,
   AlertCircle,
   TrendingUp,
+  RefreshCw,
 } from "lucide-react";
 import Button from "@/components/Button";
 import PageTransition from "@/components/PageTransition";
@@ -81,6 +82,7 @@ export default function ProjectDetailPage({
   const [showResourceForm, setShowResourceForm] = useState(false);
   const [showMilestoneForm, setShowMilestoneForm] = useState(false);
   const [showRagStatusModal, setShowRagStatusModal] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(
     null,
   );
@@ -439,6 +441,38 @@ export default function ProjectDetailPage({
     }
   }
 
+  async function handleJiraSync() {
+    setIsSyncing(true);
+    try {
+      const res = await fetch(`/api/projects/${resolvedParams.id}/sync-jira`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.updated_count > 0) {
+          toast.success(
+            `Synced ${result.updated_count} milestone(s) from Jira`,
+          );
+        } else {
+          toast.info("No milestones with Jira keys to sync");
+        }
+        if (result.failed_count > 0) {
+          toast.error(`${result.failed_count} milestone(s) failed to sync`);
+        }
+        fetchProject();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to sync milestones with Jira");
+      }
+    } catch (error) {
+      console.error("Error syncing with Jira:", error);
+      toast.error("Failed to sync milestones with Jira");
+    } finally {
+      setIsSyncing(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -509,6 +543,24 @@ export default function ProjectDetailPage({
                 <span className="flex items-center gap-1.5">
                   <Copy className="w-4 h-4" />
                   Duplicate
+                </span>
+              </Button>
+              <Button
+                onClick={handleJiraSync}
+                variant="secondary"
+                size="sm"
+                disabled={
+                  isSyncing ||
+                  !project.milestones ||
+                  project.milestones.length === 0
+                }
+                className="shadow-sm"
+              >
+                <span className="flex items-center gap-1.5">
+                  <RefreshCw
+                    className={`w-4 h-4 ${isSyncing ? "animate-spin" : ""}`}
+                  />
+                  {isSyncing ? "Syncing..." : "Sync Milestones"}
                 </span>
               </Button>
               <Button

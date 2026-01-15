@@ -14,6 +14,7 @@ export interface Project {
   description: string | null;
   archived: boolean;
   rag_status: "Red" | "Amber" | "Green" | "N/A";
+  last_jira_sync: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -172,4 +173,17 @@ export interface UtilizationAPIResponse {
     currentWeekUtilization: number | null;
     weeksTracked: number;
   };
+}
+
+export interface JiraSyncResult {
+  success: boolean;
+  updated_count: number;
+  failed_count: number;
+  errors: Array<{
+    milestone_id: number;
+    milestone_name: string;
+    jira_key: string;
+    error: string;
+  }>;
+  timestamp: string;
 }

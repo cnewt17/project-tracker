@@ -29,6 +29,7 @@ async function initializeSchema(database: Database) {
       description TEXT,
       archived BOOLEAN DEFAULT FALSE,
       rag_status VARCHAR NOT NULL DEFAULT 'N/A',
+      last_jira_sync TIMESTAMP,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

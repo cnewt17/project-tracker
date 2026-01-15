@@ -2,9 +2,10 @@ import { Project } from "@/lib/types";
 import { getStatusColor, getStatusIcon } from "@/lib/constants";
 import { formatDateUK } from "@/lib/dateUtils";
 import Link from "next/link";
-import { Calendar, FolderOpen, Trash2, Flag } from "lucide-react";
+import { Calendar, FolderOpen, Trash2, Flag, RefreshCw } from "lucide-react";
 import Button from "./Button";
 import RagStatusDot from "./RagStatusDot";
+import { useState } from "react";
 
 interface ProjectCardProps {
   project: Project & {
@@ -14,9 +15,28 @@ interface ProjectCardProps {
     };
   };
   onDelete?: (id: number) => void;
+  onSync?: (id: number) => Promise<void>;
 }
 
-export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  onDelete,
+  onSync,
+}: ProjectCardProps) {
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  async function handleSync(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!onSync) return;
+
+    setIsSyncing(true);
+    try {
+      await onSync(project.id);
+    } finally {
+      setIsSyncing(false);
+    }
+  }
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200 group">
       <div className="flex justify-between items-start mb-4">
@@ -36,12 +56,26 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
             </div>
           </div>
         </Link>
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(project.status, "light")} flex items-center gap-1 whitespace-nowrap ml-3`}
-        >
-          <span>{getStatusIcon(project.status)}</span>
-          {project.status}
-        </span>
+        <div className="flex items-center gap-2">
+          {onSync && (
+            <button
+              onClick={handleSync}
+              disabled={isSyncing}
+              className="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Sync milestones from Jira"
+            >
+              <RefreshCw
+                className={`w-4 h-4 text-blue-600 dark:text-blue-400 ${isSyncing ? "animate-spin" : ""}`}
+              />
+            </button>
+          )}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(project.status, "light")} flex items-center gap-1 whitespace-nowrap`}
+          >
+            <span>{getStatusIcon(project.status)}</span>
+            {project.status}
+          </span>
+        </div>
       </div>
 
       {project.description && (

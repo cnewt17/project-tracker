@@ -127,6 +127,35 @@ export default function ProjectsPage() {
     }
   }
 
+  async function handleSync(projectId: number) {
+    try {
+      const res = await fetch(`/api/projects/${projectId}/sync-jira`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.updated_count > 0) {
+          toast.success(
+            `Synced ${result.updated_count} milestone(s) from Jira`,
+          );
+        } else {
+          toast.info("No milestones with Jira keys to sync");
+        }
+        if (result.failed_count > 0) {
+          toast.error(`${result.failed_count} milestone(s) failed to sync`);
+        }
+        fetchProjects();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || "Failed to sync milestones with Jira");
+      }
+    } catch (error) {
+      console.error("Error syncing with Jira:", error);
+      toast.error("Failed to sync milestones with Jira");
+    }
+  }
+
   const statusBadges = PROJECT_STATUSES.map((status) => ({
     value: status.value,
     label: `${status.icon} ${status.label}`,
@@ -310,6 +339,7 @@ export default function ProjectsPage() {
                 onDelete={(id) =>
                   setDeleteModal({ isOpen: true, projectId: id })
                 }
+                onSync={handleSync}
               />
             ))}
           </StaggeredFadeIn>
